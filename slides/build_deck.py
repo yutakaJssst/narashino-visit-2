@@ -195,13 +195,31 @@ picture_fit(s, img("campus_annotated.png"), Inches(0.75), Inches(2.7), Inches(11
 s, n = new()
 head(s, "About Us", "AIとIoTを組み合わせたソフトウェアものづくりを学ぶ。",
      "応用情報工学科では、3つの分野を学びます。", n=n)
-picture_fit(s, img("image12.jpg"), Inches(0.75), Inches(2.78), Inches(11.8), Inches(3.95))
+fields = [("情報処理", "データを分析して、価値のある情報をつくる。AIもこの分野。", "field1w.jpg"),
+          ("ネットワークシステム", "モノやサービスをつなぎ、情報を安全・確実に届ける。", "field2w.jpg"),
+          ("組込みシステム", "家電や機械の中で動くソフトウェアをつくる。", "field3w.jpg")]
+cw, cgap = Inches(3.74), Inches(0.3)
+for i, (t, d, f) in enumerate(fields):
+    x = Inches(0.75) + i * (cw + cgap)
+    rect(s, x, Inches(2.8), cw, Inches(3.8), PAPER)
+    if os.path.exists(img(f)):
+        s.shapes.add_picture(img(f), x, Inches(2.8), cw, Inches(2.1))
+    rect(s, x, Inches(4.9), Pt(4), Inches(1.7), PURPLE)
+    tf = textbox(s, x + Inches(0.28), Inches(5.08), cw - Inches(0.5), Inches(0.5))
+    line(tf, t, SERIF, 21, INK, bold=True, first=True)
+    tf = textbox(s, x + Inches(0.28), Inches(5.62), cw - Inches(0.5), Inches(1.05))
+    line(tf, d, SANS, 13, MUTED, line_spacing=1.55, first=True)
 
 # ---------------------------------------------------------------- 5 日習の先輩
 s, n = new()
 head(s, "Students' Work", "日習の先輩が、この学科で一緒に作っています。",
-     "CSTコースの皆さんの作品。高校にいながら、理工学部の授業を受けられます。", n=n)
-picture_fit(s, img("work_nichinara.png"), Inches(2.5), Inches(2.9), Inches(8.3), Inches(3.7))
+     "CSTコースの皆さんの作品。高校にいながら、理工学部の授業を受けられます。（クリックで再生・30秒）", n=n)
+_video = img("nichinara_work.mp4")
+if os.path.exists(_video):
+    s.shapes.add_movie(_video, Inches(3.15), Inches(2.92), Inches(7.03), Inches(3.5),
+                       poster_frame_image=img("image29.png"), mime_type="video/mp4")
+else:
+    picture_fit(s, img("image29.png"), Inches(3.15), Inches(2.92), Inches(7.03), Inches(3.5))
 
 # ---------------------------------------------------------------- 6 今日やること
 s, n = new()
@@ -250,80 +268,76 @@ for i, (t, d) in enumerate(flow):
         tf = textbox(s, x + wcard, Inches(4.05), gap, Inches(0.6), align=PP_ALIGN.CENTER)
         line(tf, "▶", SANS, 20, PURPLE, first=True)
 
-# ---------------------------------------------------------------- 9 全部この1か所
+# ---------------------------------------------------------------- 9 頼み方
 s, n = new()
-head(s, "Data", "見出しも、色も、ゲームも。書いてあるのは1か所だけ。", n=n)
-rect(s, Inches(0.75), Inches(2.68), Inches(7.3), Inches(3.78), RGBColor(0x2B, 0x25, 0x33))
-code = [
-    "const siteData = {",
-    '  schoolName: "日本大学習志野高等学校",',
-    '  theme: { brand: "#0f2a5c", accent: "#d7263d" },',
-    "  features: [",
-    '    { title: "人工芝のグラウンド", body: "…" },',
-    "  ],",
-    "  voices: [",
-    '    { name: "1年生", quote: "＿＿＿＿＿" },',
-    "  ],",
-    "  game: { lives: 3, stages: [ … ] }",
-    "};",
+head(s, "How to Ask", "AIには、こう頼みます。", n=n)
+rect(s, Inches(0.75), Inches(2.68), Inches(7.3), Inches(3.82), RGBColor(0x2B, 0x25, 0x33))
+prompt = [
+    "日大習志野高校の1年生に聞いた内容を、",
+    "サイトに反映してください。",
+    "",
+    "・魅力の3つを「人工芝」「売店」「図書室」にする",
+    "・生徒の声を、次の3つの言葉に差し替える",
+    "・テーマの色を青系にする",
+    "",
+    "script.js の siteData だけを変更し、",
+    "他のコードは変えないでください。",
 ]
-tf = textbox(s, Inches(1.05), Inches(2.95), Inches(6.8), Inches(3.3))
-for i, ln in enumerate(code):
-    line(tf, ln, MONO, 12, RGBColor(0xE8, 0xE3, 0xEE), line_spacing=1.45, first=(i == 0))
-notes = [("校名・キャッチコピー", "サイトの一番上に出る文字"),
-         ("色", "この2行を変えるだけで全体の色が変わる"),
-         ("魅力・生徒の声", "今日、みなさんの言葉で埋めるところ"),
-         ("ゲーム", "ステージも敵も、ここに書いてある")]
-tf = textbox(s, Inches(8.5), Inches(2.9), Inches(4.1), Inches(3.4))
-for i, (t, d) in enumerate(notes):
-    line(tf, t, SANS, 16, PURPLE, bold=True, space_before=(0 if i == 0 else 16), first=(i == 0))
-    line(tf, d, SANS, 13, MUTED, line_spacing=1.5, space_before=2)
+tf = textbox(s, Inches(1.05), Inches(2.95), Inches(6.8), Inches(3.4))
+for i, ln in enumerate(prompt):
+    line(tf, ln if ln else "\u3000", SANS, 14, RGBColor(0xE8, 0xE3, 0xEE), line_spacing=1.55, first=(i == 0))
+tips = [("聞いた言葉を、そのまま渡す", "「いい感じにして」では伝わらない"),
+        ("どこを変えるか、名指しする", "変えてほしい場所をはっきり言う"),
+        ("変えないでほしい所も、言う", "触られたくない部分を先に守る")]
+tf = textbox(s, Inches(8.5), Inches(2.95), Inches(4.1), Inches(3.4))
+for i, (t, d) in enumerate(tips):
+    line(tf, t, SANS, 17, PURPLE, bold=True, space_before=(0 if i == 0 else 26), first=(i == 0))
+    line(tf, d, SANS, 13, MUTED, line_spacing=1.5, space_before=4)
 
 # ---------------------------------------------------------------- 10 読めれば直せる
 s, n = new()
-statement(s, "Why It Matters", "読める人が、直せる人になる。",
-          "AIが書いたものを、読んで、確かめて、直す。そこから先は人間の仕事です。", n=n)
+statement(s, "Why It Matters", "AIと対話できる人が、必要になる。",
+          "うまく頼む。出てきたものを確かめる。ちがえば、ちがうと言って直させる。この往復ができる人です。", n=n)
 
-# ---------------------------------------------------------------- 11 ステージも文字
+# ---------------------------------------------------------------- 11 対話の記録
 s, n = new()
-head(s, "Game", "ゲームのステージも、ただの文字です。",
-     "「#」を1つ足せば足場が増え、「E」を書けば敵が現れます。", n=n)
-rect(s, Inches(0.75), Inches(3.0), Inches(7.5), Inches(3.35), RGBColor(0x2B, 0x25, 0x33))
-stage = [
-    "..................................",
-    "..................................",
-    "...................oo.............",
-    "..................====............",
-    "..................................",
-    "......ooo....................oo...",
-    "......===...................====..",
-    "..P.........E...B..........E......",
-    "######################...#########",
-    "######################...#########",
-]
-tf = textbox(s, Inches(1.05), Inches(3.3), Inches(7.0), Inches(2.8))
-for i, ln in enumerate(stage):
-    line(tf, ln, MONO, 13.5, RGBColor(0xE8, 0xE3, 0xEE), line_spacing=1.28, first=(i == 0))
-leg = [("#", "地面"), ("=", "すり抜け床"), ("o", "アイテム"),
-       ("E", "歩く敵"), ("B", "ジャンプ台"), ("P", "スタート")]
-tf = textbox(s, Inches(8.75), Inches(3.15), Inches(3.9), Inches(3.2))
-for i, (c, d) in enumerate(leg):
-    line(tf, "　" + c + "　　" + d, SANS, 16, INK, line_spacing=1.85, first=(i == 0))
+head(s, "Dialogue", "このミニ講義も、AIとの対話で作りました。",
+     "きのうの1時間40分。作業の記録（Gitの履歴）から、そのままの時刻です。", n=n)
+log = [("12:36", "「20分ずつ、2回。リポジトリを分けて作って」", "日習のサイトの下地ができた"),
+       ("13:00", "「いかにもAIが作ったサイト。作り直して」", "デザインを全部組み直した"),
+       ("13:32", "「ゲームが単調。もっと本格的に」", "3ステージのアクションゲームになった"),
+       ("13:45", "「公開したら、ゲームが動かない」", "バグを見つけて直した"),
+       ("14:13", "「スライドを作って」", "この18枚ができた"),
+       ("いま", "「4枚目の丸が変」「この説明は分からない」", "その指摘で、今このページを直した")]
+for i, (t, said, got) in enumerate(log):
+    y = Inches(2.78) + i * Inches(0.63)
+    rect(s, Inches(0.75), y + Inches(0.06), Pt(3), Inches(0.42), PURPLE)
+    tf = textbox(s, Inches(1.02), y, Inches(0.95), Inches(0.48), anchor=MSO_ANCHOR.MIDDLE)
+    line(tf, t, MONO, 13, PURPLE, bold=True, first=True)
+    tf = textbox(s, Inches(2.1), y, Inches(5.6), Inches(0.48), anchor=MSO_ANCHOR.MIDDLE)
+    line(tf, said, SANS, 15, INK, first=True)
+    tf = textbox(s, Inches(7.95), y, Inches(0.5), Inches(0.48), anchor=MSO_ANCHOR.MIDDLE)
+    line(tf, "▶", SANS, 12, PURPLE, first=True)
+    tf = textbox(s, Inches(8.5), y, Inches(4.1), Inches(0.48), anchor=MSO_ANCHOR.MIDDLE)
+    line(tf, got, SANS, 14, MUTED, first=True)
+tf = textbox(s, Inches(0.75), Inches(6.55), Inches(11.8), Inches(0.4))
+line(tf, "うまくいかない、と言い続けたのは人間です。AIは言われるまで気づきませんでした。",
+     SANS, 16, PURPLE, bold=True, first=True)
 
 # ---------------------------------------------------------------- 12 3年後7年後
 s, n = new()
 head(s, "Your Future", "3年後、みなさんは大学生。7年後、働いています。", n=n)
 rect(s, Inches(1.4), Inches(3.9), Inches(10.5), Pt(3), LINE)
-marks = [("2026", "今日", "高校1年生", Inches(1.4)),
-         ("2029", "3年後", "大学に入る", Inches(5.15)),
-         ("2033", "7年後", "働きはじめる", Inches(8.9))]
-for year, when, what, x in marks:
+marks = [("2026", "今日", "高校1年生", Inches(1.4), 22),
+         ("2029", "3年後", "大学に入る", Inches(5.15), 22),
+         ("2033", "7年後", "就職、または大学院", Inches(8.9), 17)]
+for year, when, what, x, wsize in marks:
     rect(s, x + Inches(0.55), Inches(3.72), Inches(0.22), Inches(0.22), PURPLE, MSO_SHAPE.OVAL)
     tf = textbox(s, x, Inches(2.95), Inches(2.6), Inches(0.7), align=PP_ALIGN.CENTER)
     line(tf, year, SERIF, 34, PURPLE, bold=True, spacing=1, first=True)
     tf = textbox(s, x, Inches(4.25), Inches(2.6), Inches(1.1), align=PP_ALIGN.CENTER)
     line(tf, when, SANS, 15, MUTED, first=True)
-    line(tf, what, SERIF, 22, INK, bold=True, space_before=6)
+    line(tf, what, SERIF, wsize, INK, bold=True, space_before=6)
 tf = textbox(s, Inches(0.75), Inches(5.85), Inches(11.8), Inches(0.8))
 line(tf, "そのころAIが何をできるようになっているか、私にも分かりません。", SANS, 18, INK, first=True)
 
@@ -364,19 +378,13 @@ line(tf, "AIは日習のことを何も知りませんでした。知ってい�
 
 # ---------------------------------------------------------------- 15 AIも間違える
 s, n = new()
-head(s, "Check", "AIも間違えます。確かめるのは人間です。", n=n)
-items = [("つくった", "AIがゲームのステージを作った"),
-         ("確かめた", "本当にクリアできるか、自動で調べるプログラムを人間が書いた"),
-         ("それでも", "公開して初めて見つかったバグが1つありました")]
-for i, (t, d) in enumerate(items):
-    y = Inches(2.95) + i * Inches(1.15)
-    rect(s, Inches(0.75), y, Pt(4), Inches(0.85), PURPLE)
-    tf = textbox(s, Inches(1.1), y, Inches(2.1), Inches(0.85), anchor=MSO_ANCHOR.MIDDLE)
-    line(tf, t, SERIF, 21, PURPLE, bold=True, first=True)
-    tf = textbox(s, Inches(3.3), y, Inches(9.2), Inches(0.85), anchor=MSO_ANCHOR.MIDDLE)
-    line(tf, d, SANS, 17, INK, line_spacing=1.4, first=True)
+head(s, "Check", "AIも間違えます。確かめるのは人間です。",
+     "AIが作ったジャンプ台。押した長さでジャンプを低くする処理が、ジャンプ台の勢いまで消していました。", n=n)
+if os.path.exists(img("bug_before_after.png")):
+    picture_fit(s, img("bug_before_after.png"), Inches(0.75), Inches(2.9), Inches(11.8), Inches(3.4))
 tf = textbox(s, Inches(0.75), Inches(6.45), Inches(11.8), Inches(0.5))
-line(tf, "確かめる仕組みを作れる人が要ります。それを学ぶのが情報系の学科です。", SANS, 17, PURPLE, bold=True, first=True)
+line(tf, "公開してから見つかりました。確かめる仕組みを作れる人が要ります。それを学ぶのが情報系の学科です。",
+     SANS, 16, PURPLE, bold=True, first=True)
 
 # ---------------------------------------------------------------- 16 まとめ
 s, n = new()
@@ -387,7 +395,7 @@ tf = textbox(s, Inches(1.1), Inches(1.6), Inches(11.2), Inches(0.9))
 line(tf, "今日、持って帰ってほしいこと。", SERIF, 38, WHITE, bold=True, first=True)
 pts = [("01", "いまのAIを、自分で触ってみる", "どこまでできて、どこができないかは、触らないと分からない"),
        ("02", "何を作るか決めるのは、人間", "AIは日習を知らない。決めて、聞いて、確かめるのはみなさん"),
-       ("03", "読めれば、直せる", "その中身を学ぶのが、応用情報工学科です")]
+       ("03", "AIと対話できる人になる", "うまく頼み、確かめ、直させる。その中身を学ぶのが応用情報工学科です")]
 for i, (num, t, d) in enumerate(pts):
     y = Inches(2.85) + i * Inches(1.28)
     tf = textbox(s, Inches(1.1), y, Inches(1.0), Inches(0.6))
