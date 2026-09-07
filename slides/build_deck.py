@@ -11,6 +11,7 @@ from pptx.oxml.ns import qn
 
 IMG = sys.argv[1]
 OUT = sys.argv[2]
+SESSION = int(sys.argv[3]) if len(sys.argv) > 3 else 1
 
 PURPLE = RGBColor(0x91, 0x37, 0x7D)
 VIOLET = RGBColor(0x59, 0x3F, 0xBF)
@@ -406,20 +407,19 @@ for i, (num, t, d) in enumerate(pts):
     line(tf, d, SANS, 14, WHITE, first=True)
 footer(s, n, dark=True)
 
-# ---------------------------------------------------------------- 17,18 QR
-for label, qr, url in [("1回目のみなさんへ", "narashino-visit-1-qr.png",
-                        "https://yutakajssst.github.io/narashino-visit-1/"),
-                       ("2回目のみなさんへ", "narashino-visit-2-qr.png",
-                        "https://yutakajssst.github.io/narashino-visit-2/")]:
-    s, n = new()
-    head(s, "Your Site", "今日つくったサイトは、ここにあります。",
-         label + "　放課後でも、家でも開けます。", n=n)
-    if os.path.exists(img(qr)):
-        picture_fit(s, img(qr), Inches(1.35), Inches(2.85), Inches(3.3), Inches(3.3))
-    tf = textbox(s, Inches(5.25), Inches(3.55), Inches(7.4), Inches(1.4))
-    line(tf, url, MONO, 16, PURPLE, bold=True, line_spacing=1.4, first=True)
-    line(tf, "スマホのカメラでQRコードを読んでください。", SANS, 15, MUTED, space_before=16)
-    line(tf, "みなさんの言葉が入ったページと、ミニゲームがあります。", SANS, 15, MUTED, space_before=4)
+# ---------------------------------------------------------------- 17 QR（この回のぶんだけ）
+label = f"{SESSION}回目のみなさんへ"
+qr = f"narashino-visit-{SESSION}-qr.png"
+url = f"https://yutakajssst.github.io/narashino-visit-{SESSION}/"
+s, n = new()
+head(s, "Your Site", "今日つくったサイトは、ここにあります。",
+     label + "　放課後でも、家でも開けます。", n=n)
+if os.path.exists(img(qr)):
+    picture_fit(s, img(qr), Inches(1.35), Inches(2.85), Inches(3.3), Inches(3.3))
+tf = textbox(s, Inches(5.25), Inches(3.55), Inches(7.4), Inches(1.4))
+line(tf, url, MONO, 16, PURPLE, bold=True, line_spacing=1.4, first=True)
+line(tf, "スマホのカメラでQRコードを読んでください。", SANS, 15, MUTED, space_before=16)
+line(tf, "みなさんの言葉が入ったページと、ミニゲームがあります。", SANS, 15, MUTED, space_before=4)
 
 prs.save(OUT)
 print("saved", OUT, "slides:", len(prs.slides.__iter__.__self__._sldIdLst))
