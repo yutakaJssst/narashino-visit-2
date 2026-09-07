@@ -290,8 +290,9 @@ for i, (t, d) in enumerate(flow):
 
 # ---------------------------------------------------------------- 9 頼み方
 s, n = new()
-head(s, "How to Ask", "AIには、こう頼みます。", n=n)
-rect(s, Inches(0.75), Inches(2.68), Inches(7.3), Inches(3.82), RGBColor(0x2B, 0x25, 0x33))
+head(s, "How to Ask", "AIには、こう頼みます。",
+     "これは例です。今日みなさんから聞いた言葉で、この中身が決まります。", n=n)
+rect(s, Inches(0.75), Inches(2.85), Inches(7.3), Inches(3.6), RGBColor(0x2B, 0x25, 0x33))
 prompt = [
     "日大習志野高校の1年生に聞いた内容を、",
     "サイトに反映してください。",
@@ -300,16 +301,15 @@ prompt = [
     "・生徒の声を、次の3つの言葉に差し替える",
     "・テーマの色を青系にする",
     "",
-    "script.js の siteData だけを変更し、",
-    "他のコードは変えないでください。",
+    "ゲームは、いまのままにしておいてください。",
 ]
-tf = textbox(s, Inches(1.05), Inches(2.95), Inches(6.8), Inches(3.4))
+tf = textbox(s, Inches(1.05), Inches(3.18), Inches(6.8), Inches(3.1))
 for i, ln in enumerate(prompt):
     line(tf, ln if ln else "\u3000", SANS, 14, RGBColor(0xE8, 0xE3, 0xEE), line_spacing=1.55, first=(i == 0))
 tips = [("聞いた言葉を、そのまま渡す", "「いい感じにして」では伝わらない"),
         ("どこを変えるか、名指しする", "変えてほしい場所をはっきり言う"),
         ("変えないでほしい所も、言う", "触られたくない部分を先に守る")]
-tf = textbox(s, Inches(8.5), Inches(2.95), Inches(4.1), Inches(3.4))
+tf = textbox(s, Inches(8.5), Inches(3.1), Inches(4.1), Inches(3.3))
 for i, (t, d) in enumerate(tips):
     line(tf, t, SANS, 17, PURPLE, bold=True, space_before=(0 if i == 0 else 26), first=(i == 0))
     line(tf, d, SANS, 13, MUTED, line_spacing=1.5, space_before=4)
