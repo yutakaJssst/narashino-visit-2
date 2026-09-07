@@ -115,22 +115,120 @@ const siteData = {
     { mode: "新京成線", body: "北習志野駅から徒歩20分" },
     { mode: "バス", body: "北習志野駅から津田沼行き「日大習志野高校」下車 徒歩3分" }
   ],
+  routeMap: {
+    campus: "日本大学理工学部 船橋キャンパス",
+    here: "14号館",
+    hereNote: "今日はここ",
+    start: "船橋日大前駅",
+    line: "東葉高速線",
+    goal: "日大習志野高校",
+    address: "習志野台 7-24-24",
+    walk: "徒歩5分",
+    alt: "北習志野駅 徒歩20分／バス"
+  },
   game: {
-    title: "キャンパスルート＆売店チャレンジ",
-    body: "船橋日大前駅の西口から、日大理工キャンパスの緑の中を抜けて、日大習志野高校へ向かうミニゲームです。道中の障害物をジャンプで避けよう。",
+    title: "日習クエスト",
+    body: "船橋日大前駅から、理工学部のキャンパスを抜けて、校舎の陸橋の上まで。3ステージの横スクロールアクションです。敵は上から踏むと倒せます。",
+    note: "ステージは文字で書かれた地図です。「#」を1つ足せば足場が増え、「E」を書けば敵が現れます。今日はここも書き換えます。",
+    startTitle: "日習クエスト",
+    startNote: "スタートを押す／画面をタップ",
+    hint: "← → で移動、スペースまたは ↑ でジャンプ（長押しで高く）。スマホは下のボタン。",
     playerLabel: "AI",
-    startLabel: "船橋日大前駅",
-    goalLabel: "日大習志野",
-    routeNote: "東葉高速線 船橋日大前駅 西口から徒歩5分",
-    routeItems: ["自主", "創造", "高大連携", "部活"],
-    obstacles: ["信号", "忘れ物", "寄り道"],
-    cafeteria: {
-      body: "学校に着いたら生徒ラウンジの売店タイムアタック！トレイをドラッグして、お昼ごはんと友だちをできるだけ集めよう。",
-      arriveLabel: "生徒ラウンジに到着!",
-      timeLimit: 12,
-      menuItems: ["お弁当", "パン", "おにぎり", "ジュース", "文房具"],
-      friendLabel: "友だち"
-    }
+    lives: 3,
+    tile: 40,
+    physics: {
+      gravity: 0.62,
+      jump: 12.8,
+      accel: 0.85,
+      maxSpeed: 4.8,
+      stomp: 9.4,
+      pad: 17.6
+    },
+    legend: [
+      { symbol: "#", body: "地面・ブロック" },
+      { symbol: "=", body: "すり抜け床" },
+      { symbol: "o", body: "アイテム" },
+      { symbol: "E", body: "歩く敵" },
+      { symbol: "F", body: "飛ぶ敵" },
+      { symbol: "M-", body: "横に動く床" },
+      { symbol: "V|", body: "縦に動く床" },
+      { symbol: "B", body: "ジャンプ台" },
+      { symbol: "^", body: "トゲ" },
+      { symbol: "C", body: "中間地点" },
+      { symbol: "P", body: "スタート" },
+      { symbol: "G", body: "ゴール" }
+    ],
+    stages: [
+      {
+        name: "通学路",
+        subtitle: "船橋日大前駅 → 理工学部キャンパス",
+        backdrop: "town",
+        palette: { sky: "#dbeefb", sky2: "#f4f0e6", far: "#b9d6ea", ground: "#243349", surface: "#4d8f5a", accent: "#d7263d" },
+        items: ["自", "主", "創", "造"],
+        enemyLabels: ["信号", "忘れ物", "寄り道"],
+        map: [
+          "........................................................................",
+          "........................................................................",
+          "........................................................................",
+          "........................................................................",
+          "...................oo...................................................",
+          "..................====...................F..............................",
+          "........................................................................",
+          "....................................oo..................................",
+          "......ooo....................oo....====...................oo............",
+          "......===...................====.........................====...........",
+          "..P.........E...B..........E............E.............C........E..oo.G..",
+          "######################...####################...########################",
+          "######################...####################...########################"
+        ]
+      },
+      {
+        name: "キャンパス",
+        subtitle: "理工学部 船橋キャンパスを抜けて",
+        backdrop: "campus",
+        palette: { sky: "#d6ecdd", sky2: "#f4f0e6", far: "#a9cfb4", ground: "#1f3a2c", surface: "#3f8f52", accent: "#d7263d" },
+        items: ["高", "大", "連", "携"],
+        enemyLabels: ["坂道", "落とし物", "うっかり"],
+        map: [
+          "............................................................................",
+          "............................................................................",
+          "............................................................................",
+          "...........................................oo...............................",
+          "..........................................====..............................",
+          "........................................|...................................",
+          "......................................F.|...................................",
+          "...............oo.....ooo.........oo....|.........................oo........",
+          "......oo......====...............====...|................oo......====.......",
+          ".....====...........M------.............V...............====................",
+          "..P........E..................E......................C........E.......oo.G..",
+          "####################.......####################...##########################",
+          "####################.......####################...##########################"
+        ]
+      },
+      {
+        name: "校舎",
+        subtitle: "生徒ラウンジから陸橋の上まで",
+        backdrop: "indoor",
+        palette: { sky: "#e9e2f2", sky2: "#f4f0e6", far: "#cdc2e0", ground: "#2b2540", surface: "#6b5aa6", accent: "#d7263d" },
+        items: ["日", "習", "自", "由"],
+        enemyLabels: ["小テスト", "宿題", "居眠り"],
+        map: [
+          "............................................................................",
+          "............................................................................",
+          "......................................................................oo.G..",
+          "..............................................oo..F..................######.",
+          "....................oo..F....................====................o.##.......",
+          "...................====....................|....................===##.......",
+          "...........................................|...................o...##.......",
+          ".............oo............oo..............|...........oo.....===..##.......",
+          "........oo..====..........====.........oo..|..........====.........##.......",
+          ".......====...........................====.|.......................##.......",
+          "..P..E...........B..................E......V........C..^^..BB......##.......",
+          "###############################...##########################################",
+          "###############################...##########################################"
+        ]
+      }
+    ]
   }
 };
 
@@ -169,7 +267,6 @@ setText("[data-campus-title]", siteData.campusTitle);
 setText("[data-campus-sub]", siteData.campusSub);
 setText("[data-game-title]", siteData.game.title);
 setText("[data-game-body]", siteData.game.body);
-setText("[data-cafeteria-body]", siteData.game.cafeteria.body);
 
 renderHeroTitle();
 renderHeroArt();
@@ -182,6 +279,7 @@ renderVoices();
 renderEvents();
 renderClubs();
 renderCampus();
+renderGame();
 initReveal();
 initGame();
 
@@ -402,15 +500,15 @@ function renderCampus() {
 }
 
 function routeMapSvg() {
-  const start = escapeHtml(siteData.game.startLabel);
-  const goal = escapeHtml(siteData.shortName);
+  const map = siteData.routeMap;
+  const t = (value) => escapeHtml(value);
   return `
-    <svg viewBox="0 0 640 260" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" role="img" aria-label="船橋日大前駅から日大習志野高校までの略図">
+    <svg viewBox="0 0 640 260" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" role="img" aria-label="${t(map.start)}から${t(map.goal)}までの略図">
       <rect x="250" y="28" width="372" height="204" rx="18" stroke-dasharray="4 6" stroke-opacity="0.55"/>
-      <text x="272" y="54" class="mono" font-size="10.5" fill="currentColor" stroke="none" opacity="0.75" letter-spacing="1">日本大学理工学部 船橋キャンパス</text>
+      <text x="272" y="54" class="mono" font-size="10.5" fill="currentColor" stroke="none" opacity="0.75" letter-spacing="1">${t(map.campus)}</text>
       <rect x="290" y="70" width="70" height="34" rx="3" stroke-opacity="0.6"/>
-      <text x="325" y="91" font-size="11" text-anchor="middle" fill="currentColor" stroke="none">14号館</text>
-      <text x="325" y="118" class="mono" font-size="9" text-anchor="middle" fill="var(--accent)" stroke="none" letter-spacing="1">今日はここ</text>
+      <text x="325" y="91" font-size="11" text-anchor="middle" fill="currentColor" stroke="none">${t(map.here)}</text>
+      <text x="325" y="118" class="mono" font-size="9" text-anchor="middle" fill="var(--accent)" stroke="none" letter-spacing="1">${t(map.hereNote)}</text>
       <rect x="384" y="58" width="56" height="30" rx="3" stroke-opacity="0.4"/>
       <rect x="462" y="52" width="62" height="36" rx="3" stroke-opacity="0.4"/>
       <rect x="548" y="60" width="50" height="28" rx="3" stroke-opacity="0.4"/>
@@ -418,18 +516,44 @@ function routeMapSvg() {
       <rect x="352" y="196" width="46" height="24" rx="3" stroke-opacity="0.4"/>
       <rect x="428" y="190" width="64" height="30" rx="3" stroke-opacity="0.4"/>
       <rect x="522" y="194" width="54" height="26" rx="3" stroke-opacity="0.4"/>
-      <text x="30" y="112" class="mono" font-size="10" fill="currentColor" stroke="none" opacity="0.7" letter-spacing="1">東葉高速線</text>
+      <text x="30" y="112" class="mono" font-size="10" fill="currentColor" stroke="none" opacity="0.7" letter-spacing="1">${t(map.line)}</text>
       <rect x="30" y="120" width="124" height="44" rx="5" fill="var(--paper)"/>
-      <text x="92" y="148" font-size="12.5" font-weight="700" text-anchor="middle" fill="currentColor" stroke="none">${start}</text>
+      <text x="92" y="148" font-size="12.5" font-weight="700" text-anchor="middle" fill="currentColor" stroke="none">${t(map.start)}</text>
       <path class="flow" d="M154 142 C 214 142, 232 152, 302 152 L 456 152" stroke="var(--accent)" stroke-width="2.4"/>
-      <text x="300" y="180" class="mono" font-size="11" text-anchor="middle" fill="var(--accent)" stroke="none" letter-spacing="1.5">徒歩5分</text>
+      <text x="300" y="180" class="mono" font-size="11" text-anchor="middle" fill="var(--accent)" stroke="none" letter-spacing="1.5">${t(map.walk)}</text>
       <rect x="456" y="120" width="146" height="64" rx="5" fill="currentColor" stroke="none"/>
-      <text x="529" y="149" font-size="13" font-weight="700" text-anchor="middle" fill="var(--paper)" stroke="none">${goal}高校</text>
-      <text x="529" y="168" class="mono" font-size="9" text-anchor="middle" fill="var(--paper)" stroke="none" opacity="0.8" letter-spacing="1">習志野台 7-24-24</text>
+      <text x="529" y="149" font-size="13" font-weight="700" text-anchor="middle" fill="var(--paper)" stroke="none">${t(map.goal)}</text>
+      <text x="529" y="168" class="mono" font-size="9" text-anchor="middle" fill="var(--paper)" stroke="none" opacity="0.8" letter-spacing="1">${t(map.address)}</text>
       <path d="M92 164 C 92 220, 140 236, 250 236" stroke-dasharray="2 6" stroke-opacity="0.5"/>
-      <text x="30" y="246" class="mono" font-size="10" fill="currentColor" stroke="none" opacity="0.7" letter-spacing="1">北習志野駅 徒歩20分／バス</text>
+      <text x="30" y="246" class="mono" font-size="10" fill="currentColor" stroke="none" opacity="0.7" letter-spacing="1">${t(map.alt)}</text>
     </svg>
   `;
+}
+
+function renderGame() {
+  const game = siteData.game;
+  setText("[data-game-hint]", game.hint);
+  setText("[data-game-note]", game.note);
+  setHtml(
+    "[data-game-legend]",
+    game.legend
+      .map((item) => `<li><code>${escapeHtml(item.symbol)}</code><span>${escapeHtml(item.body)}</span></li>`)
+      .join("")
+  );
+  setHtml(
+    "[data-game-stages]",
+    game.stages
+      .map(
+        (stage, index) => `
+          <div class="game-stage">
+            <b>${String(index + 1).padStart(2, "0")}</b>
+            <strong>${escapeHtml(stage.name)}</strong>
+            <span>${escapeHtml(stage.subtitle)}</span>
+          </div>
+        `
+      )
+      .join("")
+  );
 }
 
 function initReveal() {
@@ -454,682 +578,1144 @@ function initReveal() {
 
 function initGame() {
   const canvas = document.querySelector("#gameCanvas");
+  if (!canvas) return;
   const ctx = canvas.getContext("2d");
-  const startButton = document.querySelector("[data-start-game]");
-  const jumpButton = document.querySelector("[data-jump]");
-  const scoreElement = document.querySelector("[data-score]");
-  const bestElement = document.querySelector("[data-best-score]");
-  const menuCountElement = document.querySelector("[data-menu-count]");
-  const friendCountElement = document.querySelector("[data-friend-count]");
-  const bestKey = "high-school-visit-route-best-score";
-  const cafeteriaTotalTime = Math.round(siteData.game.cafeteria.timeLimit * 60);
+  const cfg = siteData.game;
+  const TILE = cfg.tile || 40;
+  const VIEW_W = 960;
+  const VIEW_H = 520;
+  const STEP = 1000 / 60;
 
-  const state = {
-    phase: "route",
-    running: false,
-    gameOver: false,
-    arrived: false,
-    score: 0,
-    best: Number(localStorage.getItem(bestKey) || 0),
-    speed: 4.8,
-    frame: 0,
-    distance: 0,
-    finishDistance: 2600,
-    ground: 330,
-    player: {
-      x: 104,
-      y: 282,
-      width: 54,
-      height: 54,
-      velocityY: 0,
-      grounded: true
+  const P = Object.assign(
+    {
+      gravity: 0.62,
+      jump: 12.8,
+      accel: 0.85,
+      maxSpeed: 4.8,
+      friction: 0.8,
+      airFriction: 0.93,
+      maxFall: 14,
+      stomp: 9.4,
+      pad: 17.6,
+      coyote: 6,
+      buffer: 8,
+      enemySpeed: 1.1,
+      flyerSpeed: 1.1
     },
-    obstacles: [],
-    collectibles: [],
-    cafeteria: {
-      transition: 0,
-      totalTime: cafeteriaTotalTime,
-      timeLeft: 0,
-      spawnTimer: 0,
-      itemsSpawned: 0,
-      items: [],
-      menuCount: 0,
-      friendCount: 0,
-      playerX: canvas.width / 2,
-      targetX: canvas.width / 2
-    }
+    cfg.physics || {}
+  );
+
+  const dpr = Math.min(window.devicePixelRatio || 1, 2);
+  canvas.width = VIEW_W * dpr;
+  canvas.height = VIEW_H * dpr;
+
+  const hud = {
+    stage: document.querySelector("[data-hud-stage]"),
+    stageName: document.querySelector("[data-hud-stage-name]"),
+    items: document.querySelector("[data-hud-items]"),
+    lives: document.querySelector("[data-hud-lives]"),
+    time: document.querySelector("[data-hud-time]"),
+    best: document.querySelector("[data-hud-best]")
+  };
+  const startButton = document.querySelector("[data-game-start]");
+  const keys = { left: false, right: false, jump: false };
+
+  const game = {
+    mode: "title",
+    stageIndex: 0,
+    lives: cfg.lives || 3,
+    items: 0,
+    time: 0,
+    total: 0,
+    overlay: 0,
+    shake: 0,
+    visible: true,
+    cam: { x: 0, y: 0 },
+    world: null,
+    player: null,
+    particles: [],
+    best: loadBest()
   };
 
-  bestElement.textContent = state.best;
+  window.__game = game;
+  game.step = update;
+  game.render = draw;
 
-  const reset = () => {
-    state.phase = "route";
-    state.running = true;
-    state.gameOver = false;
-    state.arrived = false;
-    state.score = 0;
-    state.speed = 4.8;
-    state.frame = 0;
-    state.distance = 0;
-    state.obstacles = [];
-    state.collectibles = [];
-    state.player.y = state.ground - state.player.height;
-    state.player.velocityY = 0;
-    state.player.grounded = true;
-    state.cafeteria.transition = 0;
-    state.cafeteria.timeLeft = 0;
-    state.cafeteria.spawnTimer = 0;
-    state.cafeteria.itemsSpawned = 0;
-    state.cafeteria.items = [];
-    state.cafeteria.menuCount = 0;
-    state.cafeteria.friendCount = 0;
-    state.cafeteria.playerX = canvas.width / 2;
-    state.cafeteria.targetX = canvas.width / 2;
-    startButton.textContent = "リスタート";
-    jumpButton.hidden = false;
-    scoreElement.textContent = state.score;
-    menuCountElement.textContent = 0;
-    friendCountElement.textContent = 0;
-  };
-
-  const jump = () => {
-    if (!state.running) {
-      reset();
-      return;
-    }
-
-    if (state.phase !== "route" || state.gameOver) return;
-
-    if (state.player.grounded) {
-      state.player.velocityY = -14.4;
-      state.player.grounded = false;
-    }
-  };
-
-  const moveTrayTo = (clientX) => {
-    if (state.phase !== "cafeteria") return;
-    const rect = canvas.getBoundingClientRect();
-    const scaleX = canvas.width / rect.width;
-    const x = (clientX - rect.left) * scaleX;
-    state.cafeteria.targetX = clamp(x, 60, canvas.width - 60);
-  };
-
-  startButton.addEventListener("click", reset);
-  jumpButton.addEventListener("click", jump);
-  canvas.addEventListener("pointerdown", (event) => {
-    jump();
-    moveTrayTo(event.clientX);
-  });
-  canvas.addEventListener("pointermove", (event) => {
-    if (event.pressure === 0 && event.pointerType === "mouse") return;
-    moveTrayTo(event.clientX);
-  });
-  window.addEventListener("keydown", (event) => {
-    if (event.key === " " || event.key === "ArrowUp") {
-      event.preventDefault();
-      jump();
-    } else if (event.key === "ArrowLeft" || event.key === "ArrowRight") {
-      if (state.phase === "cafeteria" && state.running) {
-        event.preventDefault();
-        const dir = event.key === "ArrowLeft" ? -1 : 1;
-        state.cafeteria.targetX = clamp(state.cafeteria.targetX + dir * 46, 60, canvas.width - 60);
-      }
-    }
-  });
-
-  const loop = () => {
-    updateGame(state);
-    drawGame(ctx, canvas, state);
-    requestAnimationFrame(loop);
-  };
-
-  drawGame(ctx, canvas, state);
+  buildStage(0);
+  bindInput();
+  renderHud();
   requestAnimationFrame(loop);
 
-  function updateGame(game) {
-    if (!game.running) return;
-    if (game.phase === "route") {
-      updateRoute(game);
-    } else if (game.phase === "cafeteria") {
-      updateCafeteria(game);
+  /* ---------------- storage ---------------- */
+
+  function loadBest() {
+    try {
+      const raw = window.localStorage.getItem("nnhs-quest");
+      if (!raw) return null;
+      const value = JSON.parse(raw);
+      return value && typeof value.time === "number" ? value : null;
+    } catch (error) {
+      return null;
     }
   }
 
-  function updateRoute(game) {
-    if (game.gameOver) return;
-
-    game.frame += 1;
-    game.score += 1;
-    game.distance += game.speed;
-    game.speed = Math.min(11, game.speed + 0.0028);
-    scoreElement.textContent = Math.floor(game.score / 6);
-
-    if (game.distance >= game.finishDistance) {
-      arriveGame(game);
-      return;
+  function saveBest(frames, items) {
+    if (game.best && game.best.time <= frames) return;
+    game.best = { time: frames, items };
+    try {
+      window.localStorage.setItem("nnhs-quest", JSON.stringify(game.best));
+    } catch (error) {
+      /* private mode: keep the score in memory only */
     }
-
-    game.player.velocityY += 0.74;
-    game.player.y += game.player.velocityY;
-
-    const floor = game.ground - game.player.height;
-    if (game.player.y >= floor) {
-      game.player.y = floor;
-      game.player.velocityY = 0;
-      game.player.grounded = true;
-    }
-
-    if (game.frame % 96 === 0 && routeProgress(game) < 0.92) {
-      game.obstacles.push({
-        x: canvas.width + 28,
-        y: game.ground - 42,
-        width: 42,
-        height: 42,
-        label: pick(siteData.game.obstacles, game.frame / 96)
-      });
-    }
-
-    if (game.frame % 74 === 0 && routeProgress(game) < 0.95) {
-      game.collectibles.push({
-        x: canvas.width + 34,
-        y: game.ground - 118 - Math.random() * 88,
-        radius: 16,
-        collected: false,
-        label: pick(siteData.game.routeItems, game.frame / 74)
-      });
-    }
-
-    game.obstacles.forEach((obstacle) => {
-      obstacle.x -= game.speed;
-      if (intersects(game.player, obstacle, 8)) {
-        endGame(game);
-      }
-    });
-
-    game.collectibles.forEach((item) => {
-      item.x -= game.speed;
-      if (!item.collected && circleIntersectsRect(item, game.player)) {
-        item.collected = true;
-        game.score += 84;
-      }
-    });
-
-    game.obstacles = game.obstacles.filter((obstacle) => obstacle.x > -80);
-    game.collectibles = game.collectibles.filter((item) => item.x > -80 && !item.collected);
   }
 
-  function updateCafeteria(game) {
-    const cafe = game.cafeteria;
+  /* ---------------- world ---------------- */
 
-    if (cafe.transition > 0) {
-      cafe.transition -= 1;
-      return;
-    }
+  function isSolid(ch) {
+    return ch === "#" || ch === "B";
+  }
 
-    cafe.timeLeft -= 1;
-    if (cafe.timeLeft <= 0) {
-      finishCafeteria(game);
-      return;
-    }
+  function isOneWay(ch) {
+    return ch === "=";
+  }
 
-    cafe.playerX += (cafe.targetX - cafe.playerX) * 0.22;
+  function tileAt(col, row) {
+    const world = game.world;
+    if (!world || row < 0 || row >= world.rows || col < 0 || col >= world.cols) return ".";
+    return world.grid[row][col];
+  }
 
-    cafe.spawnTimer -= 1;
-    if (cafe.spawnTimer <= 0) {
-      const isFriend = Math.random() < 0.4;
-      cafe.items.push({
-        x: 70 + Math.random() * (canvas.width - 140),
-        y: -20,
-        vy: 2.8 + Math.random() * 1.6,
-        type: isFriend ? "friend" : "menu",
-        label: isFriend
-          ? siteData.game.cafeteria.friendLabel
-          : pick(siteData.game.cafeteria.menuItems, cafe.itemsSpawned),
-        caught: false
-      });
-      cafe.itemsSpawned += 1;
-      cafe.spawnTimer = 32 + Math.random() * 18;
-    }
+  function buildStage(index) {
+    const stage = cfg.stages[index];
+    const rows = stage.map;
+    const grid = rows.map((row) => row.split(""));
+    const world = {
+      stage,
+      grid,
+      rows: grid.length,
+      cols: grid[0].length,
+      pxW: grid[0].length * TILE,
+      pxH: grid.length * TILE,
+      coins: [],
+      enemies: [],
+      platforms: [],
+      checkpoints: [],
+      goal: null,
+      spawn: { x: TILE, y: TILE }
+    };
 
-    const trayTop = game.ground - 40;
-    cafe.items.forEach((item) => {
-      item.y += item.vy;
-      if (!item.caught && item.y >= trayTop && item.y <= game.ground && Math.abs(item.x - cafe.playerX) < 46) {
-        item.caught = true;
-        if (item.type === "friend") {
-          cafe.friendCount += 1;
-          game.score += 60;
-        } else {
-          cafe.menuCount += 1;
-          game.score += 40;
+    let coinIndex = 0;
+    let enemyIndex = 0;
+
+    for (let r = 0; r < world.rows; r += 1) {
+      for (let c = 0; c < world.cols; c += 1) {
+        const ch = grid[r][c];
+        if (ch === "P") {
+          world.spawn = { x: c * TILE + 7, y: r * TILE + 6 };
+          grid[r][c] = ".";
+        } else if (ch === "G") {
+          world.goal = { x: c * TILE + 4, y: (r - 1) * TILE, w: TILE - 8, h: TILE * 2 };
+          grid[r][c] = ".";
+        } else if (ch === "o") {
+          world.coins.push({
+            x: c * TILE + TILE / 2,
+            y: r * TILE + TILE / 2,
+            label: pickLabel(stage.items, coinIndex),
+            phase: (c + r) * 0.7,
+            taken: false
+          });
+          coinIndex += 1;
+          grid[r][c] = ".";
+        } else if (ch === "E") {
+          world.enemies.push({
+            kind: "walk",
+            x: c * TILE + 4,
+            y: r * TILE + 8,
+            w: TILE - 8,
+            h: TILE - 8,
+            vx: P.enemySpeed,
+            label: pickLabel(stage.enemyLabels, enemyIndex),
+            dead: 0,
+            t: 0
+          });
+          enemyIndex += 1;
+          grid[r][c] = ".";
+        } else if (ch === "F") {
+          world.enemies.push({
+            kind: "fly",
+            x: c * TILE + 4,
+            y: r * TILE + 6,
+            homeX: c * TILE + 4,
+            homeY: r * TILE + 6,
+            range: TILE * 4,
+            w: TILE - 8,
+            h: TILE - 12,
+            vx: -P.flyerSpeed,
+            label: pickLabel(stage.enemyLabels, enemyIndex),
+            dead: 0,
+            t: 0
+          });
+          enemyIndex += 1;
+          grid[r][c] = ".";
+        } else if (ch === "C") {
+          world.checkpoints.push({ x: c * TILE + 14, y: (r - 1) * TILE, w: 14, h: TILE * 2, hit: false });
+          grid[r][c] = ".";
+        } else if (ch === "M") {
+          let end = c;
+          while (end + 1 < world.cols && grid[r][end + 1] === "-") end += 1;
+          const span = Math.max(c, end - 2);
+          world.platforms.push({
+            axis: "x",
+            x: c * TILE,
+            y: r * TILE + TILE - 14,
+            w: TILE * 3,
+            h: 14,
+            min: c * TILE,
+            max: span * TILE,
+            speed: 1.15,
+            dir: 1,
+            dx: 0,
+            dy: 0
+          });
+          for (let k = c; k <= end; k += 1) grid[r][k] = ".";
+        } else if (ch === "V") {
+          let top = r;
+          let bottom = r;
+          while (top - 1 >= 0 && grid[top - 1][c] === "|") top -= 1;
+          while (bottom + 1 < world.rows && grid[bottom + 1][c] === "|") bottom += 1;
+          world.platforms.push({
+            axis: "y",
+            x: c * TILE - TILE / 2,
+            y: r * TILE + TILE - 14,
+            w: TILE * 2,
+            h: 14,
+            min: top * TILE + TILE - 14,
+            max: bottom * TILE + TILE - 14,
+            speed: 0.95,
+            dir: -1,
+            dx: 0,
+            dy: 0
+          });
+          for (let k = top; k <= bottom; k += 1) grid[k][c] = ".";
+        } else if (ch === "-" || ch === "|") {
+          grid[r][c] = ".";
         }
       }
+    }
+
+    game.world = world;
+    game.items = 0;
+    game.time = 0;
+    game.particles = [];
+    spawnPlayer();
+    snapCamera();
+  }
+
+  function pickLabel(list, index) {
+    if (!list || !list.length) return "";
+    return list[index % list.length];
+  }
+
+  function spawnPlayer() {
+    const world = game.world;
+    game.player = {
+      x: world.spawn.x,
+      y: world.spawn.y,
+      w: 26,
+      h: 34,
+      vx: 0,
+      vy: 0,
+      onGround: false,
+      facing: 1,
+      coyote: 0,
+      buffer: 0,
+      riding: null,
+      jumped: false,
+      squash: 0,
+      invuln: 70
+    };
+  }
+
+  /* ---------------- input ---------------- */
+
+  function bindInput() {
+    window.addEventListener("keydown", (event) => {
+      const code = event.key;
+      if (code === "ArrowLeft" || code === "a" || code === "A") keys.left = true;
+      else if (code === "ArrowRight" || code === "d" || code === "D") keys.right = true;
+      else if (code === " " || code === "ArrowUp" || code === "w" || code === "W") {
+        keys.jump = true;
+        if (game.player) game.player.buffer = P.buffer;
+      } else return;
+      if (game.mode === "play" && game.visible) event.preventDefault();
     });
 
-    cafe.items = cafe.items.filter((item) => !item.caught && item.y < game.ground + 40);
+    window.addEventListener("keyup", (event) => {
+      const code = event.key;
+      if (code === "ArrowLeft" || code === "a" || code === "A") keys.left = false;
+      else if (code === "ArrowRight" || code === "d" || code === "D") keys.right = false;
+      else if (code === " " || code === "ArrowUp" || code === "w" || code === "W") keys.jump = false;
+    });
 
-    scoreElement.textContent = Math.floor(game.score / 6);
-    menuCountElement.textContent = cafe.menuCount;
-    friendCountElement.textContent = cafe.friendCount;
-  }
+    if (startButton) startButton.addEventListener("click", start);
 
-  function endGame(game) {
-    game.gameOver = true;
-    game.running = false;
-    const finalScore = Math.floor(game.score / 6);
-    if (finalScore > game.best) {
-      game.best = finalScore;
-      localStorage.setItem(bestKey, String(game.best));
-      bestElement.textContent = game.best;
+    document.querySelectorAll("[data-hold]").forEach((button) => {
+      const which = button.getAttribute("data-hold");
+      const press = (on) => (event) => {
+        event.preventDefault();
+        keys[which] = on;
+        if (which === "jump" && on && game.player) game.player.buffer = P.buffer;
+        if (on && game.mode !== "play") start();
+        button.classList.toggle("is-down", on);
+      };
+      button.addEventListener("pointerdown", press(true));
+      button.addEventListener("pointerup", press(false));
+      button.addEventListener("pointercancel", press(false));
+      button.addEventListener("pointerleave", press(false));
+    });
+
+    canvas.addEventListener("pointerdown", (event) => {
+      event.preventDefault();
+      if (game.mode !== "play") {
+        start();
+        return;
+      }
+      const rect = canvas.getBoundingClientRect();
+      const x = (event.clientX - rect.left) / rect.width;
+      if (x < 0.34) keys.left = true;
+      else if (x > 0.66) keys.right = true;
+      else if (game.player) {
+        keys.jump = true;
+        game.player.buffer = P.buffer;
+      }
+    });
+
+    const release = () => {
+      keys.left = false;
+      keys.right = false;
+      keys.jump = false;
+    };
+    canvas.addEventListener("pointerup", release);
+    canvas.addEventListener("pointercancel", release);
+    canvas.addEventListener("pointerleave", release);
+    canvas.addEventListener("contextmenu", (event) => event.preventDefault());
+
+    if ("IntersectionObserver" in window) {
+      const observer = new IntersectionObserver(
+        (entries) => {
+          game.visible = entries[0].isIntersecting;
+          if (!game.visible) release();
+        },
+        { threshold: 0.25 }
+      );
+      observer.observe(canvas);
     }
   }
 
-  function arriveGame(game) {
-    game.arrived = true;
-    game.phase = "cafeteria";
-    game.score += 240;
-    game.cafeteria.transition = 60;
-    game.cafeteria.timeLeft = game.cafeteria.totalTime;
-    game.cafeteria.spawnTimer = 30;
-    game.cafeteria.itemsSpawned = 0;
-    game.cafeteria.items = [];
-    game.cafeteria.menuCount = 0;
-    game.cafeteria.friendCount = 0;
-    game.cafeteria.playerX = canvas.width / 2;
-    game.cafeteria.targetX = canvas.width / 2;
-    jumpButton.hidden = true;
-    scoreElement.textContent = Math.floor(game.score / 6);
+  function start() {
+    if (game.mode === "play" || game.mode === "ready") return;
+    game.lives = cfg.lives || 3;
+    game.total = 0;
+    game.stageIndex = 0;
+    buildStage(0);
+    game.mode = "ready";
+    game.overlay = 78;
+    renderHud();
   }
 
-  function finishCafeteria(game) {
-    game.running = false;
-    game.phase = "results";
-    const finalScore = Math.floor(game.score / 6);
-    if (finalScore > game.best) {
-      game.best = finalScore;
-      localStorage.setItem(bestKey, String(game.best));
-      bestElement.textContent = game.best;
+  /* ---------------- loop ---------------- */
+
+  let last = performance.now();
+  let acc = 0;
+
+  function loop(now) {
+    const delta = Math.min(now - last, 120);
+    last = now;
+    if (game.visible) {
+      acc += delta;
+      let guard = 0;
+      while (acc >= STEP && guard < 6) {
+        guard(update);
+        acc -= STEP;
+        guard += 1;
+      }
+      if (acc > STEP * 6) acc = 0;
+    } else {
+      acc = 0;
+    }
+    guard(draw);
+    requestAnimationFrame(loop);
+  }
+
+  /* ステージを書き換えて間違えても、ページ全体は止めない。詳しくはコンソールに出す */
+  let reported = false;
+  function guard(fn) {
+    try {
+      fn();
+    } catch (error) {
+      if (!reported) {
+        reported = true;
+        console.error("[日習クエスト] ゲームでエラーが起きました。siteData.game を確認してください。", error);
+      }
     }
   }
 
-}
+  function update() {
+    if (game.shake > 0) game.shake -= 1;
+    updateParticles();
 
-function drawGame(ctx, canvas, state) {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  const sky = ctx.createLinearGradient(0, 0, 0, canvas.height);
-  sky.addColorStop(0, "#d9f5ff");
-  sky.addColorStop(0.55, "#fbfeff");
-  sky.addColorStop(1, "#fff2cf");
-  ctx.fillStyle = sky;
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
+    if (game.mode === "ready") {
+      game.overlay -= 1;
+      if (game.overlay <= 0) game.mode = "play";
+      updateCamera();
+      return;
+    }
 
-  if (state.phase === "cafeteria" || state.phase === "results") {
-    drawCafeteria(ctx, canvas, state);
-  } else {
-    drawRoute(ctx, canvas, state);
+    if (game.mode === "clear" || game.mode === "hurt") {
+      game.overlay -= 1;
+      updateCamera();
+      if (game.overlay > 0) return;
+      if (game.mode === "hurt") {
+        if (game.lives <= 0) {
+          game.mode = "over";
+          game.overlay = 0;
+        } else {
+          spawnPlayer();
+          snapCamera();
+          game.mode = "ready";
+          game.overlay = 48;
+        }
+      } else {
+        game.total += game.time;
+        if (game.stageIndex + 1 < cfg.stages.length) {
+          game.stageIndex += 1;
+          buildStage(game.stageIndex);
+          game.mode = "ready";
+          game.overlay = 78;
+        } else {
+          saveBest(game.total, game.items);
+          game.mode = "allclear";
+        }
+      }
+      renderHud();
+      return;
+    }
+
+    if (game.mode !== "play") {
+      updateCamera();
+      return;
+    }
+
+    game.time += 1;
+    updatePlatforms();
+    updatePlayer();
+    updateEnemies();
+    checkPickups();
+    updateCamera();
+    renderHud();
   }
 
-  if (state.phase === "route" && !state.running && !state.gameOver) {
-    drawCenterLabel(ctx, canvas, "START");
+  function updatePlatforms() {
+    game.world.platforms.forEach((platform) => {
+      const before = platform.axis === "x" ? platform.x : platform.y;
+      const value = before + platform.speed * platform.dir;
+      if (value <= platform.min) {
+        platform.dir = 1;
+      } else if (value >= platform.max) {
+        platform.dir = -1;
+      }
+      const next = clamp(before + platform.speed * platform.dir, platform.min, platform.max);
+      if (platform.axis === "x") {
+        platform.dx = next - platform.x;
+        platform.dy = 0;
+        platform.x = next;
+      } else {
+        platform.dx = 0;
+        platform.dy = next - platform.y;
+        platform.y = next;
+      }
+    });
   }
 
-  if (state.gameOver) {
-    drawCenterLabel(ctx, canvas, "RETRY");
+  function updatePlayer() {
+    const player = game.player;
+    const world = game.world;
+
+    if (player.riding) {
+      player.x += player.riding.dx;
+      player.y += player.riding.dy;
+      player.riding = null;
+    }
+
+    const dir = (keys.right ? 1 : 0) - (keys.left ? 1 : 0);
+    if (dir !== 0) {
+      player.vx += dir * P.accel;
+      player.facing = dir;
+    }
+    player.vx = clamp(player.vx, -P.maxSpeed, P.maxSpeed);
+    if (dir === 0) player.vx *= player.onGround ? P.friction : P.airFriction;
+    if (Math.abs(player.vx) < 0.04) player.vx = 0;
+
+    player.vy = Math.min(player.vy + P.gravity, P.maxFall);
+    if (player.buffer > 0) player.buffer -= 1;
+    if (player.coyote > 0) player.coyote -= 1;
+    if (player.invuln > 0) player.invuln -= 1;
+    if (player.squash > 0) player.squash -= 1;
+
+    if (player.buffer > 0 && player.coyote > 0) {
+      player.vy = -P.jump;
+      player.buffer = 0;
+      player.coyote = 0;
+      player.onGround = false;
+      player.jumped = true;
+      player.squash = 8;
+    }
+    /* 短く押したら低く跳ぶ。ジャンプ台と踏みつけの勢いは削らない */
+    if (player.jumped && !keys.jump && player.vy < -4.6) {
+      player.vy = -4.6;
+      player.jumped = false;
+    }
+    if (player.vy >= 0) player.jumped = false;
+
+    const prevY = player.y;
+    const wasFalling = player.vy > 0;
+
+    moveX(player, world);
+    moveY(player, world, prevY);
+
+    world.platforms.forEach((platform) => {
+      if (player.vy < 0) return;
+      const prevBottom = prevY + player.h;
+      const bottom = player.y + player.h;
+      if (
+        prevBottom <= platform.y + 2 &&
+        bottom >= platform.y &&
+        bottom <= platform.y + platform.h + 10 &&
+        player.x + player.w > platform.x + 2 &&
+        player.x < platform.x + platform.w - 2
+      ) {
+        player.y = platform.y - player.h;
+        player.vy = 0;
+        player.onGround = true;
+        player.riding = platform;
+      }
+    });
+
+    if (player.onGround) {
+      player.coyote = P.coyote;
+      if (wasFalling) player.squash = 6;
+      const footRow = Math.floor((player.y + player.h + 2) / TILE);
+      const c0 = Math.floor(player.x / TILE);
+      const c1 = Math.floor((player.x + player.w - 1) / TILE);
+      for (let c = c0; c <= c1; c += 1) {
+        if (tileAt(c, footRow) === "B") {
+          player.vy = -P.pad;
+          player.onGround = false;
+          player.jumped = false;
+          /* 押しっぱなしの通常ジャンプでジャンプ台の勢いを消さない */
+          player.coyote = 0;
+          player.buffer = 0;
+          player.squash = 10;
+          burst(player.x + player.w / 2, player.y + player.h, world.stage.palette.accent, 8);
+          break;
+        }
+      }
+    }
+
+    if (player.y > world.pxH + 80) hurt();
+    if (spikeHit(player)) hurt();
   }
 
-  if (state.phase === "results") {
-    drawResults(ctx, canvas, state);
+  function moveX(body, world) {
+    body.x += body.vx;
+    if (body.x < 0) {
+      body.x = 0;
+      body.vx = 0;
+    }
+    if (body.x + body.w > world.pxW) {
+      body.x = world.pxW - body.w;
+      body.vx = 0;
+    }
+    const r0 = Math.floor(body.y / TILE);
+    const r1 = Math.floor((body.y + body.h - 1) / TILE);
+    if (body.vx > 0) {
+      const col = Math.floor((body.x + body.w - 1) / TILE);
+      for (let r = r0; r <= r1; r += 1) {
+        if (isSolid(tileAt(col, r))) {
+          body.x = col * TILE - body.w;
+          body.vx = 0;
+          break;
+        }
+      }
+    } else if (body.vx < 0) {
+      const col = Math.floor(body.x / TILE);
+      for (let r = r0; r <= r1; r += 1) {
+        if (isSolid(tileAt(col, r))) {
+          body.x = (col + 1) * TILE;
+          body.vx = 0;
+          break;
+        }
+      }
+    }
   }
-}
 
-function drawRoute(ctx, canvas, state) {
-  drawRouteBackground(ctx, canvas, state);
-  drawRouteProgress(ctx, canvas, state);
+  function moveY(body, world, prevY) {
+    body.y += body.vy;
+    body.onGround = false;
+    const c0 = Math.floor(body.x / TILE);
+    const c1 = Math.floor((body.x + body.w - 1) / TILE);
+    if (body.vy > 0) {
+      const row = Math.floor((body.y + body.h - 1) / TILE);
+      for (let c = c0; c <= c1; c += 1) {
+        const ch = tileAt(c, row);
+        const top = row * TILE;
+        if (isSolid(ch) || (isOneWay(ch) && prevY + body.h <= top + 2)) {
+          body.y = top - body.h;
+          body.vy = 0;
+          body.onGround = true;
+          break;
+        }
+      }
+    } else if (body.vy < 0) {
+      const row = Math.floor(body.y / TILE);
+      for (let c = c0; c <= c1; c += 1) {
+        if (isSolid(tileAt(c, row))) {
+          body.y = (row + 1) * TILE;
+          body.vy = 0;
+          break;
+        }
+      }
+    }
+  }
 
-  ctx.fillStyle = siteData.theme.sand;
-  ctx.fillRect(0, state.ground, canvas.width, canvas.height - state.ground);
+  function spikeHit(body) {
+    const c0 = Math.floor((body.x + 4) / TILE);
+    const c1 = Math.floor((body.x + body.w - 5) / TILE);
+    const r0 = Math.floor((body.y + 8) / TILE);
+    const r1 = Math.floor((body.y + body.h - 2) / TILE);
+    for (let r = r0; r <= r1; r += 1) {
+      for (let c = c0; c <= c1; c += 1) {
+        if (tileAt(c, r) === "^") return true;
+      }
+    }
+    return false;
+  }
 
-  ctx.strokeStyle = "rgba(23, 32, 51, 0.18)";
-  ctx.lineWidth = 4;
-  ctx.beginPath();
-  ctx.moveTo(0, state.ground);
-  ctx.lineTo(canvas.width, state.ground);
-  ctx.stroke();
+  function updateEnemies() {
+    const player = game.player;
+    game.world.enemies.forEach((enemy) => {
+      if (enemy.dead) {
+        enemy.dead += 1;
+        return;
+      }
+      enemy.t += 1;
+      if (enemy.kind === "walk") {
+        enemy.x += enemy.vx;
+        const probeX = enemy.vx > 0 ? enemy.x + enemy.w + 2 : enemy.x - 2;
+        const col = Math.floor(probeX / TILE);
+        const midRow = Math.floor((enemy.y + enemy.h / 2) / TILE);
+        const footRow = Math.floor((enemy.y + enemy.h + 6) / TILE);
+        const ahead = tileAt(col, footRow);
+        if (isSolid(tileAt(col, midRow)) || !(isSolid(ahead) || isOneWay(ahead))) {
+          enemy.vx *= -1;
+          enemy.x += enemy.vx * 2;
+        }
+      } else {
+        enemy.x += enemy.vx;
+        const col = Math.floor((enemy.vx > 0 ? enemy.x + enemy.w + 2 : enemy.x - 2) / TILE);
+        const row = Math.floor((enemy.y + enemy.h / 2) / TILE);
+        if (Math.abs(enemy.x - enemy.homeX) > enemy.range || isSolid(tileAt(col, row))) {
+          enemy.vx *= -1;
+          enemy.x += enemy.vx * 2;
+        }
+        enemy.y = enemy.homeY + Math.sin(enemy.t * 0.045) * 26;
+      }
 
-  ctx.fillStyle = "rgba(63, 158, 99, 0.22)";
-  ctx.fillRect(0, state.ground + 70, canvas.width, 34);
-  for (let x = -60; x < canvas.width + 80; x += 46) {
-    const waveX = x - ((state.frame * 0.55) % 46);
+      if (player.invuln > 0) return;
+      if (!overlaps(player, enemy)) return;
+      const stomping = player.vy > 1 && player.y + player.h - player.vy <= enemy.y + 12;
+      if (stomping) {
+        enemy.dead = 1;
+        player.vy = -P.stomp;
+        player.jumped = false;
+        player.squash = 10;
+        game.shake = 6;
+        burst(enemy.x + enemy.w / 2, enemy.y + enemy.h / 2, game.world.stage.palette.accent, 12);
+      } else {
+        hurt();
+      }
+    });
+  }
+
+  function checkPickups() {
+    const player = game.player;
+    const world = game.world;
+
+    world.coins.forEach((coin) => {
+      if (coin.taken) return;
+      if (
+        Math.abs(coin.x - (player.x + player.w / 2)) < 22 &&
+        Math.abs(coin.y - (player.y + player.h / 2)) < 26
+      ) {
+        coin.taken = true;
+        game.items += 1;
+        burst(coin.x, coin.y, "#f7b801", 8);
+      }
+    });
+
+    world.checkpoints.forEach((point) => {
+      if (point.hit) return;
+      if (overlaps(player, point)) {
+        point.hit = true;
+        world.spawn = { x: point.x - 6, y: point.y + TILE };
+        burst(point.x + 6, point.y + 12, world.stage.palette.accent, 10);
+      }
+    });
+
+    if (world.goal && overlaps(player, world.goal)) {
+      game.mode = "clear";
+      game.overlay = 120;
+      burst(world.goal.x + world.goal.w / 2, world.goal.y + 20, world.stage.palette.accent, 20);
+    }
+  }
+
+  function hurt() {
+    const player = game.player;
+    if (player.invuln > 0 || game.mode !== "play") return;
+    game.lives -= 1;
+    game.shake = 14;
+    game.mode = "hurt";
+    game.overlay = 52;
+    player.invuln = 90;
+    player.vy = -7;
+    burst(player.x + player.w / 2, player.y + player.h / 2, "#d7263d", 14);
+    renderHud();
+  }
+
+  function overlaps(a, b) {
+    return a.x < b.x + b.w && a.x + a.w > b.x && a.y < b.y + b.h && a.y + a.h > b.y;
+  }
+
+  function burst(x, y, color, count) {
+    for (let i = 0; i < count; i += 1) {
+      game.particles.push({
+        x,
+        y,
+        vx: (Math.random() - 0.5) * 5,
+        vy: -Math.random() * 4.5 - 0.5,
+        life: 26 + Math.random() * 14,
+        max: 40,
+        size: 2 + Math.random() * 3,
+        color
+      });
+    }
+    if (game.particles.length > 220) game.particles.splice(0, game.particles.length - 220);
+  }
+
+  function updateParticles() {
+    for (let i = game.particles.length - 1; i >= 0; i -= 1) {
+      const particle = game.particles[i];
+      particle.x += particle.vx;
+      particle.y += particle.vy;
+      particle.vy += 0.26;
+      particle.life -= 1;
+      if (particle.life <= 0) game.particles.splice(i, 1);
+    }
+  }
+
+  function updateCamera() {
+    const target = cameraTarget();
+    game.cam.x += (target.x - game.cam.x) * 0.14;
+    game.cam.y += (target.y - game.cam.y) * 0.14;
+  }
+
+  function snapCamera() {
+    const target = cameraTarget();
+    game.cam.x = target.x;
+    game.cam.y = target.y;
+  }
+
+  function cameraTarget() {
+    const world = game.world;
+    const player = game.player;
+    if (!world || !player) return { x: 0, y: 0 };
+    return {
+      x: clamp(player.x + player.w / 2 - VIEW_W * 0.42, 0, Math.max(0, world.pxW - VIEW_W)),
+      y: clamp(player.y + player.h / 2 - VIEW_H * 0.55, 0, Math.max(0, world.pxH - VIEW_H))
+    };
+  }
+
+  /* ---------------- hud ---------------- */
+
+  function renderHud() {
+    const stage = cfg.stages[game.stageIndex];
+    if (hud.stage) hud.stage.textContent = `${game.stageIndex + 1} / ${cfg.stages.length}`;
+    if (hud.stageName) hud.stageName.textContent = stage ? stage.name : "";
+    if (hud.items) hud.items.textContent = String(game.items);
+    if (hud.lives) hud.lives.textContent = String(Math.max(0, game.lives));
+    if (hud.time) hud.time.textContent = formatTime(game.total + game.time);
+    if (hud.best) hud.best.textContent = game.best ? formatTime(game.best.time) : "--";
+  }
+
+  function formatTime(frames) {
+    const seconds = frames / 60;
+    return seconds.toFixed(1);
+  }
+
+  /* ---------------- draw ---------------- */
+
+  function draw() {
+    const world = game.world;
+    const palette = world.stage.palette;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.clearRect(0, 0, VIEW_W, VIEW_H);
+
+    const sky = ctx.createLinearGradient(0, 0, 0, VIEW_H);
+    sky.addColorStop(0, palette.sky);
+    sky.addColorStop(1, palette.sky2);
+    ctx.fillStyle = sky;
+    ctx.fillRect(0, 0, VIEW_W, VIEW_H);
+
+    const shakeX = game.shake > 0 ? (Math.random() - 0.5) * game.shake : 0;
+    const shakeY = game.shake > 0 ? (Math.random() - 0.5) * game.shake : 0;
+
+    drawBackdrop(palette);
+
+    ctx.save();
+    ctx.translate(-Math.round(game.cam.x) + shakeX, -Math.round(game.cam.y) + shakeY);
+    drawTiles(palette);
+    drawPlatforms(palette);
+    drawCheckpoints(palette);
+    drawGoal(palette);
+    drawCoins();
+    drawEnemies(palette);
+    drawPlayer(palette);
+    drawParticles();
+    ctx.restore();
+
+    drawOverlay();
+  }
+
+  function drawBackdrop(palette) {
+    const offset = -game.cam.x * 0.32;
+    const baseY = VIEW_H - 96 - game.cam.y * 0.16;
+    ctx.save();
+    ctx.globalAlpha = 0.55;
+    ctx.fillStyle = palette.far;
+    const kind = game.world.stage.backdrop;
+    for (let i = -1; i < 14; i += 1) {
+      const x = offset + i * 220;
+      if (x > VIEW_W + 220 || x < -260) continue;
+      if (kind === "town") {
+        ctx.fillRect(x, baseY - 120, 88, 120);
+        ctx.fillRect(x + 104, baseY - 78, 62, 78);
+        ctx.beginPath();
+        ctx.moveTo(x + 96, baseY - 78);
+        ctx.lineTo(x + 135, baseY - 108);
+        ctx.lineTo(x + 174, baseY - 78);
+        ctx.closePath();
+        ctx.fill();
+      } else if (kind === "campus") {
+        ctx.beginPath();
+        ctx.arc(x + 46, baseY - 74, 46, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillRect(x + 40, baseY - 40, 12, 40);
+        ctx.fillRect(x + 122, baseY - 138, 74, 138);
+      } else {
+        ctx.fillRect(x, baseY - 150, 168, 150);
+        ctx.save();
+        ctx.globalAlpha = 0.5;
+        ctx.fillStyle = palette.sky;
+        for (let row = 0; row < 4; row += 1) {
+          for (let col = 0; col < 3; col += 1) {
+            ctx.fillRect(x + 18 + col * 50, baseY - 132 + row * 34, 32, 20);
+          }
+        }
+        ctx.restore();
+      }
+    }
+    ctx.restore();
+  }
+
+  function drawTiles(palette) {
+    const world = game.world;
+    const c0 = Math.max(0, Math.floor(game.cam.x / TILE) - 1);
+    const c1 = Math.min(world.cols - 1, Math.ceil((game.cam.x + VIEW_W) / TILE));
+    const r0 = Math.max(0, Math.floor(game.cam.y / TILE) - 1);
+    const r1 = Math.min(world.rows - 1, Math.ceil((game.cam.y + VIEW_H) / TILE));
+
+    for (let r = r0; r <= r1; r += 1) {
+      for (let c = c0; c <= c1; c += 1) {
+        const ch = world.grid[r][c];
+        const x = c * TILE;
+        const y = r * TILE;
+        if (ch === "#") {
+          ctx.fillStyle = palette.ground;
+          ctx.fillRect(x, y, TILE, TILE);
+          if (!isSolid(tileAt(c, r - 1))) {
+            ctx.fillStyle = palette.surface;
+            ctx.fillRect(x, y, TILE, 9);
+            ctx.fillStyle = "rgba(255,255,255,0.18)";
+            ctx.fillRect(x, y, TILE, 3);
+          }
+          ctx.strokeStyle = "rgba(255,255,255,0.06)";
+          ctx.lineWidth = 1;
+          ctx.strokeRect(x + 0.5, y + 0.5, TILE - 1, TILE - 1);
+        } else if (ch === "=") {
+          ctx.fillStyle = palette.surface;
+          roundRect(ctx, x, y + 6, TILE, 13, 5);
+          ctx.fill();
+          ctx.fillStyle = "rgba(255,255,255,0.22)";
+          ctx.fillRect(x + 2, y + 8, TILE - 4, 3);
+        } else if (ch === "^") {
+          ctx.fillStyle = palette.accent;
+          for (let i = 0; i < 3; i += 1) {
+            const sx = x + i * (TILE / 3);
+            ctx.beginPath();
+            ctx.moveTo(sx, y + TILE);
+            ctx.lineTo(sx + TILE / 6, y + 12);
+            ctx.lineTo(sx + TILE / 3, y + TILE);
+            ctx.closePath();
+            ctx.fill();
+          }
+        } else if (ch === "B") {
+          ctx.fillStyle = palette.ground;
+          roundRect(ctx, x + 2, y + 16, TILE - 4, TILE - 16, 5);
+          ctx.fill();
+          ctx.fillStyle = "#f7b801";
+          roundRect(ctx, x + 1, y + 6, TILE - 2, 16, 7);
+          ctx.fill();
+          ctx.fillStyle = "rgba(255,255,255,0.5)";
+          ctx.fillRect(x + 7, y + 10, TILE - 14, 3);
+        }
+      }
+    }
+  }
+
+  function drawPlatforms(palette) {
+    game.world.platforms.forEach((platform) => {
+      ctx.save();
+      ctx.strokeStyle = "rgba(20,26,38,0.16)";
+      ctx.setLineDash([3, 7]);
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      if (platform.axis === "x") {
+        ctx.moveTo(platform.min + platform.w / 2, platform.y + 7);
+        ctx.lineTo(platform.max + platform.w / 2, platform.y + 7);
+      } else {
+        ctx.moveTo(platform.x + platform.w / 2, platform.min + 7);
+        ctx.lineTo(platform.x + platform.w / 2, platform.max + 7);
+      }
+      ctx.stroke();
+      ctx.restore();
+
+      ctx.fillStyle = palette.ground;
+      roundRect(ctx, platform.x, platform.y, platform.w, platform.h, 5);
+      ctx.fill();
+      ctx.fillStyle = palette.surface;
+      roundRect(ctx, platform.x, platform.y, platform.w, 6, 3);
+      ctx.fill();
+    });
+  }
+
+  function drawCoins() {
+    game.world.coins.forEach((coin) => {
+      if (coin.taken) return;
+      const bob = Math.sin(performance.now() / 380 + coin.phase) * 3.5;
+      ctx.save();
+      ctx.translate(coin.x, coin.y + bob);
+      ctx.fillStyle = "#f7b801";
+      ctx.beginPath();
+      ctx.arc(0, 0, 13, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = "rgba(255,255,255,0.55)";
+      ctx.beginPath();
+      ctx.arc(-4, -4, 4, 0, Math.PI * 2);
+      ctx.fill();
+      if (coin.label) {
+        ctx.fillStyle = "#3a2a04";
+        ctx.font = "700 13px system-ui, sans-serif";
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+        ctx.fillText(coin.label, 0, 1);
+      }
+      ctx.restore();
+    });
+  }
+
+  function drawEnemies(palette) {
+    game.world.enemies.forEach((enemy) => {
+      if (enemy.dead > 24) return;
+      ctx.save();
+      ctx.translate(enemy.x + enemy.w / 2, enemy.y + enemy.h / 2);
+      if (enemy.dead) {
+        ctx.globalAlpha = Math.max(0, 1 - enemy.dead / 24);
+        ctx.scale(1 + enemy.dead / 26, Math.max(0.12, 1 - enemy.dead / 18));
+      }
+      const wobble = enemy.kind === "walk" ? Math.sin(enemy.t * 0.16) * 2 : 0;
+      ctx.fillStyle = palette.accent;
+      roundRect(ctx, -enemy.w / 2, -enemy.h / 2 + wobble, enemy.w, enemy.h, 9);
+      ctx.fill();
+      if (enemy.kind === "fly") {
+        ctx.fillStyle = "rgba(255,255,255,0.7)";
+        const flap = Math.sin(enemy.t * 0.32) * 5;
+        ctx.beginPath();
+        ctx.ellipse(-enemy.w / 2 - 6, -2 + flap, 9, 5, 0, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.beginPath();
+        ctx.ellipse(enemy.w / 2 + 6, -2 - flap, 9, 5, 0, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      ctx.fillStyle = "#fff";
+      ctx.beginPath();
+      ctx.arc(-6, -3 + wobble, 4.4, 0, Math.PI * 2);
+      ctx.arc(6, -3 + wobble, 4.4, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = "#141a26";
+      const look = enemy.vx > 0 ? 1.6 : -1.6;
+      ctx.beginPath();
+      ctx.arc(-6 + look, -3 + wobble, 2.1, 0, Math.PI * 2);
+      ctx.arc(6 + look, -3 + wobble, 2.1, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+
+      if (enemy.dead) return;
+      ctx.fillStyle = "rgba(20,26,38,0.62)";
+      ctx.font = "700 11px system-ui, sans-serif";
+      ctx.textAlign = "center";
+      ctx.textBaseline = "alphabetic";
+      ctx.fillText(enemy.label, enemy.x + enemy.w / 2, enemy.y - 7);
+    });
+  }
+
+  function drawCheckpoints(palette) {
+    game.world.checkpoints.forEach((point) => {
+      ctx.fillStyle = "rgba(20,26,38,0.5)";
+      ctx.fillRect(point.x + 4, point.y, 3, point.h);
+      ctx.fillStyle = point.hit ? palette.accent : "rgba(20,26,38,0.22)";
+      ctx.beginPath();
+      ctx.moveTo(point.x + 7, point.y + 4);
+      ctx.lineTo(point.x + 34, point.y + 13);
+      ctx.lineTo(point.x + 7, point.y + 22);
+      ctx.closePath();
+      ctx.fill();
+    });
+  }
+
+  function drawGoal(palette) {
+    const goal = game.world.goal;
+    if (!goal) return;
+    ctx.fillStyle = "rgba(20,26,38,0.7)";
+    ctx.fillRect(goal.x + 3, goal.y, 4, goal.h);
+    const wave = Math.sin(performance.now() / 240) * 4;
+    ctx.fillStyle = palette.accent;
     ctx.beginPath();
-    ctx.arc(waveX, state.ground + 82, 18, 0, Math.PI);
-    ctx.strokeStyle = "rgba(255, 255, 255, 0.72)";
-    ctx.lineWidth = 2;
-    ctx.stroke();
-  }
-
-  for (let x = -80; x < canvas.width + 120; x += 90) {
-    const laneX = x - ((state.frame * state.speed) % 90);
-    ctx.fillStyle = "rgba(255, 255, 255, 0.75)";
-    roundRect(ctx, laneX, state.ground + 36, 42, 6, 3);
+    ctx.moveTo(goal.x + 7, goal.y + 3);
+    ctx.lineTo(goal.x + 52 + wave, goal.y + 17);
+    ctx.lineTo(goal.x + 7, goal.y + 31);
+    ctx.closePath();
     ctx.fill();
-  }
-
-  state.collectibles.forEach((item) => {
-    ctx.fillStyle = siteData.theme.gold;
-    ctx.beginPath();
-    ctx.arc(item.x, item.y, item.radius, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.fillStyle = "#172033";
-    ctx.font = "900 11px system-ui, sans-serif";
-    ctx.textAlign = "center";
-    ctx.textBaseline = "middle";
-    ctx.fillText("+", item.x, item.y + 1);
+    ctx.fillStyle = "rgba(20,26,38,0.55)";
     ctx.font = "800 11px system-ui, sans-serif";
-    ctx.fillText(item.label, item.x, item.y - 25);
-  });
+    ctx.textAlign = "left";
+    ctx.fillText("GOAL", goal.x + 10, goal.y + 48);
+  }
 
-  state.obstacles.forEach((obstacle) => {
-    drawEnemy(ctx, obstacle);
-  });
+  function drawPlayer(palette) {
+    const player = game.player;
+    if (game.mode === "hurt" && Math.floor(game.overlay / 4) % 2 === 0) return;
+    if (player.invuln > 0 && game.mode === "play" && Math.floor(player.invuln / 4) % 2 === 0) return;
 
-  drawPlayer(ctx, state.player);
-}
-
-function drawEnemy(ctx, obstacle) {
-  const cx = obstacle.x + obstacle.width / 2;
-  const cy = obstacle.y + obstacle.height / 2;
-
-  ctx.fillStyle = siteData.theme.accent;
-  ctx.beginPath();
-  ctx.ellipse(cx, cy, obstacle.width / 2, obstacle.height / 2, 0, 0, Math.PI * 2);
-  ctx.fill();
-
-  ctx.fillStyle = "#fff";
-  ctx.beginPath();
-  ctx.arc(cx - 8, cy - 4, 6, 0, Math.PI * 2);
-  ctx.arc(cx + 8, cy - 4, 6, 0, Math.PI * 2);
-  ctx.fill();
-
-  ctx.fillStyle = "#172033";
-  ctx.beginPath();
-  ctx.arc(cx - 8, cy - 2, 2.6, 0, Math.PI * 2);
-  ctx.arc(cx + 8, cy - 2, 2.6, 0, Math.PI * 2);
-  ctx.fill();
-
-  ctx.strokeStyle = "#172033";
-  ctx.lineWidth = 2;
-  ctx.beginPath();
-  ctx.arc(cx, cy + 6, 6, 0, Math.PI);
-  ctx.stroke();
-
-  ctx.fillStyle = "#172033";
-  ctx.font = "800 10px system-ui, sans-serif";
-  ctx.textAlign = "center";
-  ctx.textBaseline = "alphabetic";
-  ctx.fillText(obstacle.label, cx, obstacle.y - 6);
-}
-
-function drawCafeteria(ctx, canvas, state) {
-  const cafe = state.cafeteria;
-
-  ctx.fillStyle = "rgba(247, 184, 1, 0.16)";
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-  ctx.fillStyle = siteData.theme.sand;
-  ctx.fillRect(0, state.ground, canvas.width, canvas.height - state.ground);
-  ctx.strokeStyle = "rgba(23, 32, 51, 0.18)";
-  ctx.lineWidth = 4;
-  ctx.beginPath();
-  ctx.moveTo(0, state.ground);
-  ctx.lineTo(canvas.width, state.ground);
-  ctx.stroke();
-
-  cafe.items.forEach((item) => {
-    ctx.fillStyle = item.type === "friend" ? siteData.theme.mint : siteData.theme.gold;
+    const squash = player.squash > 0 ? player.squash / 26 : 0;
+    const scaleX = 1 + squash;
+    const scaleY = 1 - squash;
+    ctx.save();
+    ctx.translate(player.x + player.w / 2, player.y + player.h);
+    ctx.scale(scaleX, scaleY);
+    ctx.fillStyle = "rgba(20,26,38,0.14)";
     ctx.beginPath();
-    ctx.arc(item.x, item.y, 20, 0, Math.PI * 2);
+    ctx.ellipse(0, 4, player.w * 0.55, 5, 0, 0, Math.PI * 2);
     ctx.fill();
-    ctx.fillStyle = "#172033";
-    ctx.font = "900 12px system-ui, sans-serif";
+    ctx.fillStyle = siteData.theme.brand;
+    roundRect(ctx, -player.w / 2, -player.h, player.w, player.h, 8);
+    ctx.fill();
+    ctx.fillStyle = palette.accent;
+    roundRect(ctx, -player.w / 2 - 4, -player.h + 9, 6, 14, 3);
+    ctx.fill();
+    ctx.fillStyle = "#fff";
+    const eyeX = player.facing * 3;
+    ctx.beginPath();
+    ctx.arc(eyeX - 5, -player.h + 13, 4.2, 0, Math.PI * 2);
+    ctx.arc(eyeX + 5, -player.h + 13, 4.2, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = "#141a26";
+    ctx.beginPath();
+    ctx.arc(eyeX - 5 + player.facing, -player.h + 13, 2, 0, Math.PI * 2);
+    ctx.arc(eyeX + 5 + player.facing, -player.h + 13, 2, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+
+    if (cfg.playerLabel) {
+      ctx.fillStyle = "rgba(20,26,38,0.55)";
+      ctx.font = "800 11px system-ui, sans-serif";
+      ctx.textAlign = "center";
+      ctx.fillText(cfg.playerLabel, player.x + player.w / 2, player.y - 8);
+    }
+  }
+
+  function drawParticles() {
+    game.particles.forEach((particle) => {
+      ctx.globalAlpha = Math.max(0, particle.life / particle.max);
+      ctx.fillStyle = particle.color;
+      ctx.fillRect(particle.x, particle.y, particle.size, particle.size);
+    });
+    ctx.globalAlpha = 1;
+  }
+
+  function drawOverlay() {
+    if (game.mode === "play") return;
+    const stage = cfg.stages[game.stageIndex];
+    let title = "";
+    let sub = "";
+
+    if (game.mode === "title") {
+      title = cfg.startTitle || "スタート";
+      sub = cfg.startNote || "";
+    } else if (game.mode === "ready") {
+      title = `STAGE ${game.stageIndex + 1}　${stage.name}`;
+      sub = stage.subtitle;
+    } else if (game.mode === "hurt") {
+      title = "ミス！";
+      sub = `のこり ${Math.max(0, game.lives)}`;
+    } else if (game.mode === "clear") {
+      title = "STAGE CLEAR";
+      sub = `${stage.name}　タイム ${formatTime(game.time)} 秒`;
+    } else if (game.mode === "over") {
+      title = "GAME OVER";
+      sub = "スタートを押すともう一度";
+    } else if (game.mode === "allclear") {
+      title = "ALL CLEAR!";
+      sub = `合計 ${formatTime(game.total)} 秒　アイテム ${game.items}`;
+    }
+
+    ctx.fillStyle = "rgba(20,26,38,0.44)";
+    ctx.fillRect(0, 0, VIEW_W, VIEW_H);
+    ctx.fillStyle = "#f7f5f0";
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
-    ctx.fillText(item.type === "friend" ? "友" : "食", item.x, item.y + 1);
-    ctx.font = "800 10px system-ui, sans-serif";
-    ctx.fillText(item.label, item.x, item.y - 28);
-  });
-
-  const trayWidth = 60;
-  const trayHeight = 40;
-  const trayX = cafe.playerX - trayWidth / 2;
-  const trayY = state.ground - trayHeight;
-  ctx.fillStyle = siteData.theme.brand;
-  roundRect(ctx, trayX, trayY, trayWidth, trayHeight, 10);
-  ctx.fill();
-  ctx.fillStyle = "#fff";
-  ctx.font = "900 12px system-ui, sans-serif";
-  ctx.textAlign = "center";
-  ctx.textBaseline = "middle";
-  ctx.fillText("TRAY", cafe.playerX, trayY + trayHeight / 2);
-
-  const barX = 58;
-  const barWidth = canvas.width - 116;
-  const timeRatio = clamp(cafe.timeLeft / cafe.totalTime, 0, 1);
-  ctx.fillStyle = "rgba(255, 255, 255, 0.88)";
-  roundRect(ctx, barX, 24, barWidth, 20, 10);
-  ctx.fill();
-  ctx.fillStyle = siteData.theme.accent;
-  roundRect(ctx, barX, 24, barWidth * timeRatio, 20, 10);
-  ctx.fill();
-  ctx.fillStyle = "#172033";
-  ctx.font = "800 12px system-ui, sans-serif";
-  ctx.textAlign = "center";
-  ctx.textBaseline = "middle";
-  ctx.fillText(`のこり ${Math.ceil(clamp(cafe.timeLeft, 0, cafe.totalTime) / 60)}秒`, canvas.width / 2, 34);
-
-  if (cafe.transition > 0) {
-    drawCenterLabel(ctx, canvas, siteData.game.cafeteria.arriveLabel);
+    ctx.font = "800 42px 'Shippori Mincho B1', serif";
+    ctx.fillText(title, VIEW_W / 2, VIEW_H / 2 - 16);
+    if (sub) {
+      ctx.font = "500 17px system-ui, sans-serif";
+      ctx.globalAlpha = 0.85;
+      ctx.fillText(sub, VIEW_W / 2, VIEW_H / 2 + 30);
+      ctx.globalAlpha = 1;
+    }
   }
-}
-
-function drawResults(ctx, canvas, state) {
-  const cafe = state.cafeteria;
-  ctx.fillStyle = "rgba(255, 255, 255, 0.94)";
-  roundRect(ctx, canvas.width / 2 - 150, canvas.height / 2 - 92, 300, 184, 12);
-  ctx.fill();
-  ctx.strokeStyle = "rgba(23, 32, 51, 0.16)";
-  ctx.stroke();
-
-  ctx.fillStyle = "#172033";
-  ctx.textAlign = "center";
-  ctx.textBaseline = "middle";
-  ctx.font = "900 20px system-ui, sans-serif";
-  ctx.fillText("けっか発表！", canvas.width / 2, canvas.height / 2 - 56);
-
-  ctx.font = "800 15px system-ui, sans-serif";
-  ctx.fillText(`メニュー ${cafe.menuCount}種類`, canvas.width / 2, canvas.height / 2 - 20);
-  ctx.fillText(`友だち ${cafe.friendCount}人`, canvas.width / 2, canvas.height / 2 + 8);
-
-  ctx.font = "900 18px system-ui, sans-serif";
-  ctx.fillStyle = siteData.theme.brand;
-  ctx.fillText(`スコア ${Math.floor(state.score / 6)}`, canvas.width / 2, canvas.height / 2 + 42);
-
-  ctx.font = "700 11px system-ui, sans-serif";
-  ctx.fillStyle = "#5e6878";
-  ctx.fillText("タップでもう一度", canvas.width / 2, canvas.height / 2 + 68);
-}
-
-function drawRouteBackground(ctx, canvas, state) {
-  ctx.fillStyle = "rgba(0, 119, 182, 0.12)";
-  for (let i = 0; i < 5; i += 1) {
-    const x = ((i * 220 - state.frame * 0.8) % 1120) - 120;
-    roundRect(ctx, x, 82 + i * 11, 110, 34, 18);
-    ctx.fill();
-  }
-
-  ctx.fillStyle = "rgba(63, 158, 99, 0.28)";
-  roundRect(ctx, 36, 204, 120, 56, 8);
-  ctx.fill();
-  ctx.fillStyle = "rgba(255, 255, 255, 0.68)";
-  roundRect(ctx, 54, 220, 84, 8, 4);
-  ctx.fill();
-
-  ctx.fillStyle = "rgba(247, 184, 1, 0.3)";
-  roundRect(ctx, canvas.width - 174, 196, 128, 74, 8);
-  ctx.fill();
-  ctx.fillStyle = "rgba(23, 32, 51, 0.12)";
-  for (let i = 0; i < 4; i += 1) {
-    roundRect(ctx, canvas.width - 154 + i * 28, 215, 16, 16, 4);
-    ctx.fill();
-  }
-
-  ctx.fillStyle = "rgba(63, 158, 99, 0.85)";
-  ctx.font = "900 15px system-ui, sans-serif";
-  ctx.textAlign = "left";
-  ctx.textBaseline = "alphabetic";
-  ctx.fillText("船橋日大前", 42, 190);
-}
-
-function drawRouteProgress(ctx, canvas, state) {
-  const x = 58;
-  const y = 28;
-  const width = canvas.width - 116;
-  const height = 96;
-  const progress = routeProgress(state);
-
-  ctx.fillStyle = "rgba(255, 255, 255, 0.88)";
-  roundRect(ctx, x, y, width, height, 8);
-  ctx.fill();
-  ctx.strokeStyle = "rgba(23, 32, 51, 0.14)";
-  ctx.lineWidth = 2;
-  ctx.stroke();
-
-  const routeY = y + 52;
-  const startX = x + 66;
-  const goalX = x + width - 72;
-  const currentX = startX + (goalX - startX) * progress;
-
-  ctx.strokeStyle = "rgba(23, 32, 51, 0.2)";
-  ctx.lineWidth = 12;
-  ctx.lineCap = "round";
-  ctx.beginPath();
-  ctx.moveTo(startX, routeY);
-  ctx.bezierCurveTo(x + width * 0.34, routeY - 28, x + width * 0.56, routeY + 28, goalX, routeY);
-  ctx.stroke();
-
-  ctx.strokeStyle = siteData.theme.brand;
-  ctx.lineWidth = 7;
-  ctx.beginPath();
-  ctx.moveTo(startX, routeY);
-  ctx.lineTo(currentX, routeY);
-  ctx.stroke();
-
-  drawMapPin(ctx, startX, routeY, siteData.theme.brand, siteData.game.startLabel);
-  drawMapPin(ctx, goalX, routeY, siteData.theme.accent, siteData.game.goalLabel);
-
-  ctx.fillStyle = siteData.theme.gold;
-  ctx.beginPath();
-  ctx.arc(currentX, routeY, 13, 0, Math.PI * 2);
-  ctx.fill();
-  ctx.fillStyle = "#172033";
-  ctx.font = "900 11px system-ui, sans-serif";
-  ctx.textAlign = "center";
-  ctx.textBaseline = "middle";
-  ctx.fillText("GO", currentX, routeY + 1);
-
-  ctx.fillStyle = "#5e6878";
-  ctx.font = "800 13px system-ui, sans-serif";
-  ctx.textAlign = "center";
-  ctx.textBaseline = "alphabetic";
-  ctx.fillText(siteData.game.routeNote, x + width / 2, y + height - 15);
-
-  ctx.fillStyle = "#172033";
-  ctx.font = "900 16px system-ui, sans-serif";
-  ctx.textAlign = "right";
-  ctx.fillText(`${Math.round(progress * 100)}%`, x + width - 16, y + height - 14);
-}
-
-function drawMapPin(ctx, x, y, color, label) {
-  ctx.fillStyle = color;
-  ctx.beginPath();
-  ctx.arc(x, y, 14, 0, Math.PI * 2);
-  ctx.fill();
-  ctx.fillStyle = "#fff";
-  ctx.beginPath();
-  ctx.arc(x, y, 5, 0, Math.PI * 2);
-  ctx.fill();
-  ctx.fillStyle = "#172033";
-  ctx.font = "900 12px system-ui, sans-serif";
-  ctx.textAlign = "center";
-  ctx.textBaseline = "alphabetic";
-  ctx.fillText(label, x, y - 22);
-}
-
-function drawPlayer(ctx, player) {
-  const x = player.x;
-  const y = player.y;
-
-  ctx.fillStyle = "rgba(23, 32, 51, 0.18)";
-  ctx.beginPath();
-  ctx.ellipse(x + 28, 334, 30, 8, 0, 0, Math.PI * 2);
-  ctx.fill();
-
-  ctx.fillStyle = siteData.theme.brand;
-  roundRect(ctx, x, y, player.width, player.height, 10);
-  ctx.fill();
-
-  ctx.fillStyle = "#ffffff";
-  roundRect(ctx, x + 10, y + 13, 34, 20, 6);
-  ctx.fill();
-
-  ctx.fillStyle = "#172033";
-  ctx.beginPath();
-  ctx.arc(x + 21, y + 23, 3, 0, Math.PI * 2);
-  ctx.arc(x + 34, y + 23, 3, 0, Math.PI * 2);
-  ctx.fill();
-
-  ctx.strokeStyle = "#172033";
-  ctx.lineWidth = 3;
-  ctx.beginPath();
-  ctx.moveTo(x + 19, y + 37);
-  ctx.lineTo(x + 15, y + 48);
-  ctx.moveTo(x + 35, y + 37);
-  ctx.lineTo(x + 39, y + 48);
-  ctx.stroke();
-}
-
-function drawCenterLabel(ctx, canvas, label) {
-  ctx.fillStyle = "rgba(255, 255, 255, 0.86)";
-  roundRect(ctx, canvas.width / 2 - 86, canvas.height / 2 - 34, 172, 68, 8);
-  ctx.fill();
-  ctx.strokeStyle = "rgba(23, 32, 51, 0.16)";
-  ctx.stroke();
-  ctx.fillStyle = "#172033";
-  ctx.font = "900 28px system-ui, sans-serif";
-  ctx.textAlign = "center";
-  ctx.textBaseline = "middle";
-  ctx.fillText(label, canvas.width / 2, canvas.height / 2 + 1);
-}
-
-function shadeColor(hex, percent) {
-  const clean = hex.replace("#", "");
-  const number = Number.parseInt(clean, 16);
-  const amount = Math.round(2.55 * percent);
-  const r = clamp((number >> 16) + amount, 0, 255);
-  const g = clamp(((number >> 8) & 0x00ff) + amount, 0, 255);
-  const b = clamp((number & 0x0000ff) + amount, 0, 255);
-  return `#${(0x1000000 + r * 0x10000 + g * 0x100 + b).toString(16).slice(1)}`;
 }
 
 function clamp(value, min, max) {
-  return Math.max(min, Math.min(max, value));
-}
-
-function routeProgress(state) {
-  return clamp(state.distance / state.finishDistance, 0, 1);
-}
-
-function pick(items, index) {
-  return items[Math.floor(index) % items.length];
+  return Math.min(Math.max(value, min), max);
 }
 
 function roundRect(ctx, x, y, width, height, radius) {
@@ -1143,42 +1729,20 @@ function roundRect(ctx, x, y, width, height, radius) {
   ctx.closePath();
 }
 
-function blob(ctx, x, y, size, points) {
-  ctx.beginPath();
-  points.forEach(([px, py, scale], index) => {
-    const cx = x + px * size;
-    const cy = y + py * size;
-    const radius = size * scale;
-    if (index === 0) {
-      ctx.moveTo(cx + radius, cy);
-    }
-    ctx.arc(cx, cy, radius, 0, Math.PI * 2);
-  });
-  ctx.fill();
-}
-
-function intersects(a, b, padding = 0) {
-  return (
-    a.x + padding < b.x + b.width &&
-    a.x + a.width - padding > b.x &&
-    a.y + padding < b.y + b.height &&
-    a.y + a.height - padding > b.y
-  );
-}
-
-function circleIntersectsRect(circle, rect) {
-  const closestX = clamp(circle.x, rect.x, rect.x + rect.width);
-  const closestY = clamp(circle.y, rect.y, rect.y + rect.height);
-  const distanceX = circle.x - closestX;
-  const distanceY = circle.y - closestY;
-  return distanceX * distanceX + distanceY * distanceY < circle.radius * circle.radius;
+function shadeColor(hex, percent) {
+  const value = hex.replace("#", "");
+  const num = parseInt(value, 16);
+  const r = clamp((num >> 16) + Math.round(2.55 * percent), 0, 255);
+  const g = clamp(((num >> 8) & 0x00ff) + Math.round(2.55 * percent), 0, 255);
+  const b = clamp((num & 0x0000ff) + Math.round(2.55 * percent), 0, 255);
+  return `#${((r << 16) | (g << 8) | b).toString(16).padStart(6, "0")}`;
 }
 
 function escapeHtml(value) {
   return String(value)
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;")
-    .replaceAll("'", "&#039;");
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
 }

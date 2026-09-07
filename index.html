@@ -143,26 +143,41 @@
       </section>
 
       <section id="game" class="game" aria-labelledby="game-title">
-        <div class="wrap game-layout">
-          <div class="game-copy">
-            <span class="section-index">07 / おまけ</span>
+        <div class="wrap">
+          <div class="game-head">
+            <span class="section-index">07 / ミニゲーム</span>
             <h2 id="game-title" data-game-title></h2>
-            <p data-game-body></p>
-            <p data-cafeteria-body></p>
-            <div class="scoreboard" aria-label="ゲームスコア">
-              <div><span>SCORE</span><strong data-score>0</strong></div>
-              <div><span>BEST</span><strong data-best-score>0</strong></div>
-              <div><span>メニュー</span><strong data-menu-count>0</strong></div>
-              <div><span>友だち</span><strong data-friend-count>0</strong></div>
-            </div>
+            <p class="game-lead" data-game-body></p>
           </div>
-          <div class="game-panel">
-            <canvas id="gameCanvas" width="900" height="420" aria-label="Campus Dash game"></canvas>
-            <div class="game-controls">
-              <button class="btn" type="button" data-start-game>スタート</button>
-              <button class="btn ghost" type="button" data-jump>ジャンプ</button>
+          <div class="game-layout">
+            <div class="game-panel">
+              <div class="hud">
+                <div class="hud-cell hud-stage">
+                  <span>STAGE</span>
+                  <strong data-hud-stage>1 / 3</strong>
+                  <em data-hud-stage-name></em>
+                </div>
+                <div class="hud-cell"><span>アイテム</span><strong data-hud-items>0</strong></div>
+                <div class="hud-cell"><span>のこり</span><strong data-hud-lives>3</strong></div>
+                <div class="hud-cell"><span>TIME</span><strong data-hud-time>0.0</strong></div>
+                <div class="hud-cell"><span>BEST</span><strong data-hud-best>--</strong></div>
+              </div>
+              <canvas id="gameCanvas" width="960" height="520" aria-label="日習クエスト"></canvas>
+              <div class="game-controls">
+                <button class="btn" type="button" data-game-start>スタート</button>
+                <div class="pad" aria-label="操作ボタン">
+                  <button class="pad-btn" type="button" data-hold="left" aria-label="左へ">◀</button>
+                  <button class="pad-btn" type="button" data-hold="right" aria-label="右へ">▶</button>
+                  <button class="pad-btn is-jump" type="button" data-hold="jump" aria-label="ジャンプ">JUMP</button>
+                </div>
+              </div>
+              <p class="game-hint" data-game-hint></p>
             </div>
-            <p class="game-hint">通学路：タップ／スペースでジャンプ　売店：ドラッグ・左右キーでトレイ移動</p>
+            <aside class="game-side">
+              <div class="game-stages" data-game-stages></div>
+              <p class="game-note" data-game-note></p>
+              <ul class="game-legend" data-game-legend></ul>
+            </aside>
           </div>
         </div>
       </section>
