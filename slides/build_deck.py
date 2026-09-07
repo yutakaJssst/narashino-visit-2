@@ -105,11 +105,28 @@ def corner_mark(slide, dark=False):
     return s
 
 
+def logo(slide, x, y, w, name="logo_ce.png", plate=True):
+    """公式ロゴを白い台紙の上に置く。白地の上では台紙は見えない。"""
+    path = img(name)
+    if not os.path.exists(path):
+        return None
+    from PIL import Image as PILImage
+    iw, ih = PILImage.open(path).size
+    h = int(w * ih / iw)
+    if plate:
+        pad = Inches(0.1)
+        rect(slide, x - pad, y - pad, w + pad * 2, h + pad * 2, WHITE)
+    slide.shapes.add_picture(path, x, y, w, h)
+    return h
+
+
 def footer(slide, n, dark=False):
-    tf = textbox(slide, Inches(0.75), Inches(6.92), Inches(7.0), Inches(0.35))
-    line(tf, "日本大学理工学部 応用情報工学科", SANS, 10.5,
-         WHITE if dark else MUTED, first=True)
-    tf2 = textbox(slide, Inches(11.8), Inches(6.92), Inches(0.8), Inches(0.35), align=PP_ALIGN.RIGHT)
+    h = logo(slide, Inches(0.75), Inches(6.86), Inches(1.32))
+    if h is None:
+        tf = textbox(slide, Inches(0.75), Inches(6.92), Inches(7.0), Inches(0.35))
+        line(tf, "日本大学理工学部 応用情報工学科", SANS, 10.5,
+             WHITE if dark else MUTED, first=True)
+    tf2 = textbox(slide, Inches(11.8), Inches(6.95), Inches(0.8), Inches(0.35), align=PP_ALIGN.RIGHT)
     line(tf2, str(n), SANS, 10.5, WHITE if dark else MUTED, first=True)
 
 
@@ -163,6 +180,7 @@ def new():
 # ---------------------------------------------------------------- 1 タイトル
 s, n = new()
 gradient_bg(s)
+logo(s, Inches(0.85), Inches(0.75), Inches(2.75))
 rect(s, Inches(3.6), Inches(2.15), Inches(6.1), Pt(1.5), WHITE)
 tf = textbox(s, Inches(1.0), Inches(2.35), Inches(11.3), Inches(0.6), align=PP_ALIGN.CENTER)
 line(tf, "C r e a t i n g   A   N e w   W o r l d", SANS, 15, WHITE, bold=True, spacing=4, first=True)
@@ -190,6 +208,7 @@ if os.path.exists(img("image2.jpeg")):
 s, n = new()
 head(s, "Campus", "みなさんの学校と、同じキャンパスの中にあります。",
      "船橋日大前駅から歩いて5分。日大習志野高校の校舎も、この地図の中にあります。", n=n)
+logo(s, Inches(10.65), Inches(0.6), Inches(1.9), "logo_cst_faculty.png", plate=False)
 picture_fit(s, img("campus_annotated.png"), Inches(0.75), Inches(2.7), Inches(11.8), Inches(4.15))
 
 # ---------------------------------------------------------------- 4 学科紹介
