@@ -236,10 +236,13 @@ head(s, "Students' Work", "日習の先輩が、この学科で一緒に作っ�
      "CSTコースの皆さんの作品。高校にいながら、理工学部の授業を受けられます。（クリックで再生・30秒）", n=n)
 _video = img("nichinara_work.mp4")
 if os.path.exists(_video):
-    s.shapes.add_movie(_video, Inches(3.15), Inches(2.92), Inches(7.03), Inches(3.5),
+    s.shapes.add_movie(_video, Inches(3.37), Inches(2.86), Inches(6.6), Inches(3.29),
                        poster_frame_image=img("image29.png"), mime_type="video/mp4")
 else:
-    picture_fit(s, img("image29.png"), Inches(3.15), Inches(2.92), Inches(7.03), Inches(3.5))
+    picture_fit(s, img("image29.png"), Inches(3.37), Inches(2.86), Inches(6.6), Inches(3.29))
+tf = textbox(s, Inches(0.75), Inches(6.32), Inches(11.8), Inches(0.5))
+line(tf, "6年前の作品です。当時はUnityの使い方を覚えるところから始めて、半年かかりました。",
+     SANS, 16, PURPLE, bold=True, first=True)
 
 # ---------------------------------------------------------------- 6 今日やること
 s, n = new()
@@ -363,21 +366,24 @@ line(tf, "そのころAIが何をできるようになっているか、私に�
 
 # ---------------------------------------------------------------- 13 AIの速さ
 s, n = new()
-head(s, "How Fast", "3年半で、ここまで来ました。", n=n)
-cols = [("2022年11月", "ChatGPTが公開された", "文章を書くのが中心だった", PAPER, INK),
-        ("2026年9月", "今日、この20分", "話を聞いて、サイトを作って、公開できる", PURPLE, WHITE)]
-for i, (d1, d2, d3, bg, fg) in enumerate(cols):
-    x = Inches(0.75) + i * Inches(6.15)
-    rect(s, x, Inches(2.9), Inches(5.65), Inches(2.6), bg)
-    tf = textbox(s, x + Inches(0.45), Inches(3.2), Inches(4.9), Inches(0.5))
-    line(tf, d1, SANS, 15, (WHITE if i else PURPLE), bold=True, first=True)
-    tf = textbox(s, x + Inches(0.45), Inches(3.75), Inches(4.9), Inches(0.7))
-    line(tf, d2, SERIF, 25, fg, bold=True, first=True)
-    tf = textbox(s, x + Inches(0.45), Inches(4.55), Inches(4.9), Inches(0.8))
-    line(tf, d3, SANS, 14, (WHITE if i else MUTED), line_spacing=1.55, first=True)
-tf = textbox(s, Inches(0.75), Inches(5.85), Inches(11.8), Inches(0.9))
-line(tf, "次の3年で何が起きるかは、誰にも分かりません。", SANS, 18, INK, first=True)
-line(tf, "だから、予想するより先に、いまのAIを自分で触ってみることです。", SANS, 18, INK, space_before=6)
+head(s, "How Fast", "半年かかったことが、いまは数十分です。", n=n)
+cols = [("6年前", "先輩たちの作品", "Unityの使い方を覚えるところから始めて、半年", PAPER, INK, MUTED),
+        ("2022年11月", "ChatGPTが公開", "そのころは、文章を書くのが中心だった", PAPER, INK, MUTED),
+        ("2026年9月", "今日、この20分", "話を聞いて、サイトを作って、公開できる", PURPLE, WHITE, WHITE)]
+cw2, gap2 = Inches(3.83), Inches(0.32)
+for i, (d1, d2, d3, bg, fg, sub) in enumerate(cols):
+    x = Inches(0.75) + i * (cw2 + gap2)
+    rect(s, x, Inches(2.9), cw2, Inches(2.75), bg)
+    tf = textbox(s, x + Inches(0.35), Inches(3.18), cw2 - Inches(0.7), Inches(0.45))
+    line(tf, d1, SANS, 14, (WHITE if i == 2 else PURPLE), bold=True, first=True)
+    tf = textbox(s, x + Inches(0.35), Inches(3.68), cw2 - Inches(0.7), Inches(0.9))
+    line(tf, d2, SERIF, 22, fg, bold=True, line_spacing=1.25, first=True)
+    tf = textbox(s, x + Inches(0.35), Inches(4.62), cw2 - Inches(0.7), Inches(0.9))
+    line(tf, d3, SANS, 13.5, sub, line_spacing=1.6, first=True)
+tf = textbox(s, Inches(0.75), Inches(5.95), Inches(11.8), Inches(0.9))
+line(tf, "同じくらいのものなら、いまはAIと話しながら数十分でできてしまいます。", SANS, 18, INK, first=True)
+line(tf, "次の3年で何が起きるかは、誰にも分かりません。だから、いまのAIを自分で触ってみることです。",
+     SANS, 18, INK, space_before=6)
 
 # ---------------------------------------------------------------- 14 AIと人間
 s, n = new()
