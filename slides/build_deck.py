@@ -58,7 +58,11 @@ def textbox(slide, x, y, w, h, align=PP_ALIGN.LEFT, anchor=MSO_ANCHOR.TOP):
 
 
 def line(tf, text, font, size, color, bold=False, spacing=None, space_before=0,
-         align=None, line_spacing=None, first=False):
+         align=None, line_spacing=None, first=False, raw=False):
+    """raw=False のとき、行末の「。」を落とす。スライドの見出し・本文の作法に合わせる。
+    文の途中の「。」はそのまま残す。実際に打ち込む文章など、原文のまま見せたいものは raw=True。"""
+    if not raw and isinstance(text, str) and text.endswith("。"):
+        text = text[:-1]
     p = tf.paragraphs[0] if first else tf.add_paragraph()
     if align is not None:
         p.alignment = align
@@ -308,7 +312,7 @@ prompt = [
 ]
 tf = textbox(s, Inches(1.05), Inches(3.18), Inches(6.8), Inches(3.1))
 for i, ln in enumerate(prompt):
-    line(tf, ln if ln else "\u3000", SANS, 14, RGBColor(0xE8, 0xE3, 0xEE), line_spacing=1.55, first=(i == 0))
+    line(tf, ln if ln else "\u3000", SANS, 14, RGBColor(0xE8, 0xE3, 0xEE), line_spacing=1.55, first=(i == 0), raw=True)
 tips = [("聞いた言葉を、そのまま渡す", "「いい感じにして」では伝わらない"),
         ("どこを変えるか、名指しする", "変えてほしい場所をはっきり言う"),
         ("変えないでほしい所も、言う", "触られたくない部分を先に守る")]
@@ -333,7 +337,7 @@ log = [("12:36", "「20分ずつ、2回。リポジトリを分けて作って�
        ("14:13", "「スライドを作って」", "この18枚ができた"),
        ("いま", "「4枚目の丸が変」「この説明は分からない」", "その指摘で、今このページを直した")]
 for i, (t, said, got) in enumerate(log):
-    y = Inches(2.78) + i * Inches(0.63)
+    y = Inches(2.76) + i * Inches(0.60)
     rect(s, Inches(0.75), y + Inches(0.06), Pt(3), Inches(0.42), PURPLE)
     tf = textbox(s, Inches(1.02), y, Inches(0.95), Inches(0.48), anchor=MSO_ANCHOR.MIDDLE)
     line(tf, t, MONO, 13, PURPLE, bold=True, first=True)
@@ -343,7 +347,7 @@ for i, (t, said, got) in enumerate(log):
     line(tf, "▶", SANS, 12, PURPLE, first=True)
     tf = textbox(s, Inches(8.5), y, Inches(4.1), Inches(0.48), anchor=MSO_ANCHOR.MIDDLE)
     line(tf, got, SANS, 14, MUTED, first=True)
-tf = textbox(s, Inches(0.75), Inches(6.55), Inches(11.8), Inches(0.4))
+tf = textbox(s, Inches(0.75), Inches(6.33), Inches(11.8), Inches(0.4))
 line(tf, "うまくいかない、と言い続けたのは人間です。AIは言われるまで気づきませんでした。",
      SANS, 16, PURPLE, bold=True, first=True)
 
@@ -399,7 +403,7 @@ for i, (ttl, items, bg, fg, sub) in enumerate([
     tf = textbox(s, x + Inches(0.45), Inches(3.9), Inches(4.9), Inches(2.3))
     for j, it in enumerate(items):
         line(tf, "・" + it, SANS, 16, fg, line_spacing=1.78, first=(j == 0))
-tf = textbox(s, Inches(0.75), Inches(6.48), Inches(11.8), Inches(0.5))
+tf = textbox(s, Inches(0.75), Inches(6.34), Inches(11.8), Inches(0.5))
 line(tf, "AIは日習のことを何も知りませんでした。知っているのは、みなさんだけです。", SANS, 17, PURPLE, bold=True, first=True)
 
 # ---------------------------------------------------------------- 15 AIも間違える
@@ -408,7 +412,7 @@ head(s, "Check", "AIも間違えます。確かめるのは人間です。",
      "AIが作ったジャンプ台。押した長さでジャンプを低くする処理が、ジャンプ台の勢いまで消していました。", n=n)
 if os.path.exists(img("bug_before_after.png")):
     picture_fit(s, img("bug_before_after.png"), Inches(0.75), Inches(2.9), Inches(11.8), Inches(3.4))
-tf = textbox(s, Inches(0.75), Inches(6.45), Inches(11.8), Inches(0.5))
+tf = textbox(s, Inches(0.75), Inches(6.34), Inches(11.8), Inches(0.5))
 line(tf, "公開してから見つかりました。確かめる仕組みを作れる人が要ります。それを学ぶのが情報系の学科です。",
      SANS, 16, PURPLE, bold=True, first=True)
 
