@@ -1017,7 +1017,7 @@ function drawRouteProgress(ctx, canvas, state) {
   ctx.fillStyle = "#172033";
   ctx.font = "900 16px system-ui, sans-serif";
   ctx.textAlign = "right";
-  ctx.fillText(`${Math.round(progress * 100)}%`, x + width - 16, y + 24);
+  ctx.fillText(`${Math.round(progress * 100)}%`, x + width - 16, y + height - 14);
 }
 
 function drawMapPin(ctx, x, y, color, label) {
