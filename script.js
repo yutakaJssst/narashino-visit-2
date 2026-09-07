@@ -84,7 +84,7 @@ const siteData = {
     body: "船橋日大前駅の西口から、日大理工キャンパスの緑の中を抜けて、日大習志野高校へ向かうミニゲームです。道中の障害物をジャンプで避けよう。",
     playerLabel: "AI",
     startLabel: "船橋日大前駅",
-    goalLabel: "日大習志野高校",
+    goalLabel: "日大習志野",
     routeNote: "東葉高速線 船橋日大前駅 西口から徒歩5分",
     routeItems: ["自主", "創造", "高大連携", "部活"],
     obstacles: ["信号", "忘れ物", "寄り道"],

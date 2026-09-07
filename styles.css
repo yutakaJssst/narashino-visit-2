@@ -157,7 +157,7 @@ h1 {
   width: min(100%, 11em);
   max-width: 11em;
   margin: 0;
-  font-size: clamp(3rem, 8vw, 6.8rem);
+  font-size: clamp(3rem, 8vw, 6.4rem);
   line-height: 0.98;
   letter-spacing: 0;
 }
