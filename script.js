@@ -935,7 +935,7 @@ function initGame() {
       acc += delta;
       let guard = 0;
       while (acc >= STEP && guard < 6) {
-        guard(update);
+        runSafely(update);
         acc -= STEP;
         guard += 1;
       }
@@ -943,13 +943,13 @@ function initGame() {
     } else {
       acc = 0;
     }
-    guard(draw);
+    runSafely(draw);
     requestAnimationFrame(loop);
   }
 
   /* ステージを書き換えて間違えても、ページ全体は止めない。詳しくはコンソールに出す */
   let reported = false;
-  function guard(fn) {
+  function runSafely(fn) {
     try {
       fn();
     } catch (error) {
