@@ -5,190 +5,162 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta
       name="description"
-      content="模擬講義でAIと一緒に即興で作る、GitHub Pages対応の学校紹介Webサイト。"
+      content="日本大学習志野高等学校の紹介サイト。模擬講義でAIと一緒に、生徒の声を聞きながらその場で書き換えていきます。"
     />
-    <title>AIと作る学校紹介サイト</title>
-    <link rel="stylesheet" href="styles.css?v=narashino" />
+    <title>日大習志野 | AIと作る学校紹介サイト</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Shippori+Mincho+B1:wght@500;700;800&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=DM+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css?v=editorial" />
   </head>
   <body>
-    <header class="site-header" aria-label="サイトヘッダー">
-      <a class="brand" href="#top" aria-label="トップへ戻る">
-        <span class="brand-mark" aria-hidden="true">AI</span>
-        <span data-school-name-short>学校紹介サイト</span>
-      </a>
-      <nav class="main-nav" aria-label="メインナビゲーション">
-        <a href="#features">魅力</a>
-        <a href="#spirit">ミッション</a>
-        <a href="#voices">生活</a>
-        <a href="#events">行事</a>
-        <a href="#game">ゲーム</a>
-      </nav>
+    <header class="site-header">
+      <div class="wrap header-inner">
+        <a class="brand" href="#top">
+          <span data-school-name-short>日大習志野</span>
+          <small>AIと作る学校紹介サイト</small>
+        </a>
+        <nav class="nav" aria-label="メインナビゲーション">
+          <a href="#features">魅力</a>
+          <a href="#mission">ミッション</a>
+          <a href="#learning">学び</a>
+          <a href="#voices">声</a>
+          <a href="#events">行事</a>
+          <a href="#campus">キャンパス</a>
+          <a href="#game">ゲーム</a>
+        </nav>
+      </div>
     </header>
 
     <main id="top">
-      <section class="hero" aria-labelledby="hero-title">
-        <canvas id="campusCanvas" class="hero-canvas" aria-hidden="true"></canvas>
-        <div class="hero-shade" aria-hidden="true"></div>
-        <div class="hero-content">
-          <p class="eyebrow" data-school-area>日本大学理工学部 船橋キャンパスの中にある、日本大学の付属高校</p>
-          <h1 id="hero-title" data-school-name>日本大学習志野高等学校</h1>
-          <p class="hero-lead" data-school-tagline>
-            スクールミッションは「自主創造」。自ら学ぶ、自ら考える、自ら道をひらく。
+      <section class="hero wrap" aria-labelledby="hero-title">
+        <div class="hero-copy">
+          <p class="hero-label">
+            <span data-hero-label></span>
           </p>
-          <div class="hero-actions" aria-label="主要リンク">
-            <a class="button primary" href="#features">魅力を見る</a>
-            <a class="button ghost" href="#game">ゲームで体験</a>
+          <h1 class="hero-title" id="hero-title" data-hero-title></h1>
+          <p class="hero-lead" data-hero-lead></p>
+          <div class="hero-meta">
+            <span data-hero-note></span>
+            <span class="scroll-cue" aria-hidden="true"><i></i>scroll</span>
+          </div>
+        </div>
+        <figure class="hero-art">
+          <div data-hero-art></div>
+          <figcaption data-hero-art-caption></figcaption>
+        </figure>
+        <p class="hero-vertical">
+          <span class="v-label" data-song-label></span>
+          <span data-song-title></span>
+        </p>
+      </section>
+
+      <div class="ticker" aria-hidden="true" data-ticker></div>
+
+      <section class="numbers wrap" aria-label="数字で見る">
+        <div class="numbers-grid" data-numbers></div>
+      </section>
+
+      <section id="features" class="section wrap reveal" aria-labelledby="features-title">
+        <div class="section-head">
+          <span class="section-index">01</span>
+          <h2 class="section-title" id="features-title" data-features-title></h2>
+          <p class="section-sub" data-features-sub></p>
+        </div>
+        <div class="bento" data-features></div>
+      </section>
+
+      <section id="mission" class="mission" aria-labelledby="mission-title">
+        <div class="wrap reveal">
+          <p class="mission-reading" data-mission-reading></p>
+          <h2 class="mission-word" id="mission-title" data-mission-word></h2>
+          <div class="mission-phrases" data-mission-phrases></div>
+          <p class="mission-caption" data-mission-caption></p>
+          <div class="powers-block">
+            <p class="powers-label" data-powers-label></p>
+            <ul class="powers" data-powers></ul>
           </div>
         </div>
       </section>
 
-      <section class="quick-stats" aria-label="学校の特徴">
-        <div class="stat">
-          <span class="stat-value" data-stat-value="0">自主創造</span>
-          <span class="stat-label" data-stat-label="0">スクールミッション</span>
+      <section id="learning" class="section wrap reveal" aria-labelledby="learning-title">
+        <div class="section-head">
+          <span class="section-index">02</span>
+          <h2 class="section-title" id="learning-title" data-learning-title></h2>
+          <p class="section-sub" data-learning-body></p>
         </div>
-        <div class="stat">
-          <span class="stat-value" data-stat-value="1">徒歩5分</span>
-          <span class="stat-label" data-stat-label="1">船橋日大前駅 西口から</span>
-        </div>
-        <div class="stat">
-          <span class="stat-value" data-stat-value="2">32部</span>
-          <span class="stat-label" data-stat-label="2">運動部16・文化部16</span>
+        <div class="courses" data-courses></div>
+        <div class="open-subjects">
+          <span class="open-label" data-open-label></span>
+          <ul class="chips" data-open-subjects></ul>
         </div>
       </section>
 
-      <section id="features" class="section band-light" aria-labelledby="features-title">
-        <div class="section-inner">
-          <div class="section-heading">
-            <p class="eyebrow">School Highlights</p>
-            <h2 id="features-title">日大習志野の魅力は、大学キャンパスの中から始まる。</h2>
-          </div>
-          <div class="feature-grid" data-feature-grid></div>
+      <section id="voices" class="section wrap reveal" aria-labelledby="voices-title">
+        <div class="section-head">
+          <span class="section-index">03</span>
+          <h2 class="section-title" id="voices-title" data-voices-title></h2>
+          <p class="section-sub" data-voices-sub></p>
         </div>
+        <div class="voices" data-voices></div>
       </section>
 
-      <section id="spirit" class="section spirit-section" aria-labelledby="spirit-title">
-        <div class="section-inner spirit-layout">
+      <section id="events" class="section wrap reveal" aria-labelledby="events-title">
+        <div class="section-head">
+          <span class="section-index">04</span>
+          <h2 class="section-title" id="events-title" data-events-title></h2>
+          <p class="section-sub" data-events-sub></p>
+        </div>
+        <div class="events" data-events></div>
+        <p class="events-hint">→ 横にスクロール</p>
+      </section>
+
+      <section id="clubs" class="section wrap reveal" aria-labelledby="clubs-title">
+        <div class="section-head">
+          <span class="section-index">05</span>
+          <h2 class="section-title" id="clubs-title" data-clubs-title></h2>
+          <p class="section-sub" data-clubs-sub></p>
+        </div>
+        <div class="club-groups" data-clubs></div>
+      </section>
+
+      <section id="campus" class="section wrap reveal" aria-labelledby="campus-title">
+        <div class="section-head">
+          <span class="section-index">06</span>
+          <h2 class="section-title" id="campus-title" data-campus-title></h2>
+          <p class="section-sub" data-campus-sub></p>
+        </div>
+        <div class="campus">
+          <ul class="facilities" data-facilities></ul>
           <div>
-            <p class="eyebrow">School Mission</p>
-            <h2 id="spirit-title">日大習志野のスクールミッション</h2>
-          </div>
-          <blockquote class="spirit-quote">
-            <p>自主創造</p>
-            <cite>自ら学ぶ・自ら考える・自ら道をひらく。日習の合言葉です。</cite>
-          </blockquote>
-        </div>
-      </section>
-
-      <section class="section split-band" aria-labelledby="learning-title">
-        <div class="section-inner split-layout">
-          <div>
-            <p class="eyebrow">Learning Style</p>
-            <h2 id="learning-title" data-learning-title>1年生は同じスタート。2年生からNP・GA・CSTの3コースへ。</h2>
-            <p data-learning-body>
-              1年次は平均化クラスで基礎を固め、2年次からNP・GA・CSTの3コースに分かれます。
-            </p>
-          </div>
-          <div class="activity-board" aria-label="学びのテーマ">
-            <div class="activity-row">
-              <span>連携</span>
-              <strong data-activity="0">高大連携</strong>
-            </div>
-            <div class="activity-row">
-              <span>学び</span>
-              <strong data-activity="1">ICT教育</strong>
-            </div>
-            <div class="activity-row">
-              <span>世界</span>
-              <strong data-activity="2">グローバル教育</strong>
-            </div>
+            <div class="route-map" data-route-map></div>
+            <ul class="access" data-access></ul>
           </div>
         </div>
       </section>
 
-      <section id="voices" class="section" aria-labelledby="voices-title">
-        <div class="section-inner">
-          <div class="section-heading">
-            <p class="eyebrow">School Life</p>
-            <h2 id="voices-title">日大習志野の学びと生活</h2>
-          </div>
-          <div class="voice-grid" data-voice-grid></div>
-        </div>
-      </section>
-
-      <section id="events" class="section band-ink" aria-labelledby="events-title">
-        <div class="section-inner">
-          <div class="section-heading">
-            <p class="eyebrow">Events</p>
-            <h2 id="events-title">一年を動かす行事</h2>
-          </div>
-          <div class="timeline" data-event-list></div>
-        </div>
-      </section>
-
-      <section class="section station-section" aria-labelledby="station-title">
-        <div class="section-inner station-layout">
-          <div>
-            <p class="eyebrow">Route Start</p>
-            <h2 id="station-title">通学路は船橋日大前駅から。</h2>
-            <p>
-              東葉高速線の船橋日大前駅 西口から日大習志野高校までは徒歩約5分。校舎は日本大学理工学部の
-              船橋キャンパスの中にあります。次のゲームでは、この駅をスタート地点にして学校までの
-              道のりをたどります。
-            </p>
-          </div>
-          <div class="activity-board" aria-label="アクセス">
-            <div class="activity-row">
-              <span>電車</span>
-              <strong>船橋日大前駅 西口から徒歩約5分</strong>
-            </div>
-            <div class="activity-row">
-              <span>電車</span>
-              <strong>北習志野駅から徒歩約20分</strong>
-            </div>
-            <div class="activity-row">
-              <span>バス</span>
-              <strong>北習志野駅から津田沼行きバス「日大習志野高校」下車 徒歩3分</strong>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section id="game" class="section game-section" aria-labelledby="game-title">
-        <div class="section-inner game-layout">
+      <section id="game" class="game" aria-labelledby="game-title">
+        <div class="wrap game-layout">
           <div class="game-copy">
-            <p class="eyebrow">Mini Game</p>
-            <h2 id="game-title" data-game-title>キャンパスルート＆売店チャレンジ</h2>
-            <p data-game-body>
-              船橋日大前駅の西口から、日大理工キャンパスの緑の中を抜けて、日大習志野高校へ向かうミニゲームです。
-            </p>
-            <p class="game-subnote" data-cafeteria-body>
-              学校に着いたら生徒ラウンジの売店タイムアタック！トレイをドラッグして、お昼ごはんと友だちをできるだけ集めよう。
-            </p>
-            <div class="game-scoreboard" aria-label="ゲームスコア">
-              <div>
-                <span>Score</span>
-                <strong data-score>0</strong>
-              </div>
-              <div>
-                <span>Best</span>
-                <strong data-best-score>0</strong>
-              </div>
-              <div>
-                <span>メニュー</span>
-                <strong data-menu-count>0</strong>
-              </div>
-              <div>
-                <span>友だち</span>
-                <strong data-friend-count>0</strong>
-              </div>
+            <span class="section-index">07 / おまけ</span>
+            <h2 id="game-title" data-game-title></h2>
+            <p data-game-body></p>
+            <p data-cafeteria-body></p>
+            <div class="scoreboard" aria-label="ゲームスコア">
+              <div><span>SCORE</span><strong data-score>0</strong></div>
+              <div><span>BEST</span><strong data-best-score>0</strong></div>
+              <div><span>メニュー</span><strong data-menu-count>0</strong></div>
+              <div><span>友だち</span><strong data-friend-count>0</strong></div>
             </div>
           </div>
           <div class="game-panel">
             <canvas id="gameCanvas" width="900" height="420" aria-label="Campus Dash game"></canvas>
             <div class="game-controls">
-              <button class="button primary" type="button" data-start-game>スタート</button>
-              <button class="button secondary" type="button" data-jump>ジャンプ</button>
+              <button class="btn" type="button" data-start-game>スタート</button>
+              <button class="btn ghost" type="button" data-jump>ジャンプ</button>
             </div>
             <p class="game-hint">通学路：タップ／スペースでジャンプ　売店：ドラッグ・左右キーでトレイ移動</p>
           </div>
@@ -197,10 +169,18 @@
     </main>
 
     <footer class="site-footer">
-      <p>
-        <span data-school-name-short-footer>日大習志野</span> /
-        AIとGitHub Pagesで作る即興Web制作デモ
-      </p>
+      <div class="wrap footer-inner">
+        <div>
+          <p class="footer-brand" data-school-name></p>
+          <p class="footer-note">
+            <span data-school-name-short-footer></span> ／
+            AIとGitHub Pagesで作る即興Web制作デモ（日本大学理工学部 応用情報工学科 模擬講義）
+          </p>
+        </div>
+        <p class="footer-source">
+          学校情報の出典：<a href="https://www.nnhs.cst.nihon-u.ac.jp/" target="_blank" rel="noreferrer">日本大学習志野高等学校 公式サイト</a>
+        </p>
+      </div>
     </footer>
 
     <script src="script.js"></script>
