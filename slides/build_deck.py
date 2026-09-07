@@ -271,7 +271,7 @@ for i, (num, t, d) in enumerate(steps):
 s, n = new()
 statement(s, "Your Turn", "みなさんに聞きます。", n=n)
 tf = textbox(s, Inches(1.1), Inches(4.65), Inches(11.0), Inches(1.9))
-qs = ["日習のいいところは？", "売店で一番買うものは？", "サイトの色は何色にする？", "ゲームの敵、何にする？"]
+qs = ["日習のいいところは？", "売店で一番買うものは？", "サイトの色は何色にする？", "ゲームをどうしたい？"]
 for i, q in enumerate(qs):
     line(tf, "　" + q, SANS, 19, WHITE, line_spacing=1.55, first=(i == 0))
 
@@ -307,15 +307,15 @@ prompt = [
     "・魅力の3つを「人工芝」「売店」「図書室」にする",
     "・生徒の声を、次の3つの言葉に差し替える",
     "・テーマの色を青系にする",
-    "",
-    "ゲームは、いまのままにしておいてください。",
+    "・ゲームの敵の名前を「小テスト」「宿題」にする",
+    "・ゲームにジャンプ台をもう1つ足す",
 ]
 tf = textbox(s, Inches(1.05), Inches(3.18), Inches(6.8), Inches(3.1))
 for i, ln in enumerate(prompt):
     line(tf, ln if ln else "\u3000", SANS, 14, RGBColor(0xE8, 0xE3, 0xEE), line_spacing=1.55, first=(i == 0), raw=True)
 tips = [("聞いた言葉を、そのまま渡す", "「いい感じにして」では伝わらない"),
         ("どこを変えるか、名指しする", "変えてほしい場所をはっきり言う"),
-        ("変えないでほしい所も、言う", "触られたくない部分を先に守る")]
+        ("出てきたものを見て、言い直す", "一度で決まらない。それがふつう")]
 tf = textbox(s, Inches(8.5), Inches(3.1), Inches(4.1), Inches(3.3))
 for i, (t, d) in enumerate(tips):
     line(tf, t, SANS, 17, PURPLE, bold=True, space_before=(0 if i == 0 else 26), first=(i == 0))
