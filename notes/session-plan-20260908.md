@@ -80,7 +80,7 @@ styles.css にある photo-section / photo-grid / photo-card のスタイルを�
 ## 前日チェック（9/7）
 
 - GitHubに `narashino-visit-1` と `narashino-visit-2` を作成して push。Pagesを有効化し、両方のURLが開くことを確認。
-- QR（`assets/narashino-visit-N-qr.png`）を印刷するかスライドに貼る。
+- QR（`assets/narashino-visit-2-qr.png`）を印刷するかスライドに貼る。
 - ローカルで `index.html` を開いて表示とゲーム動作を確認。
 
 ## 当日チェック（13:00までに）

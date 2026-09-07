@@ -15,7 +15,7 @@
 - `index.html`: ページ構造
 - `styles.css`: 見た目とレスポンシブ対応
 - `script.js`: 冒頭の `siteData` に学校データ。続けて描画とミニゲーム
-- `assets/narashino-visit-1-qr.png`: 公開URLのQRコード
+- `assets/narashino-visit-2-qr.png`: 公開URLのQRコード
 - `notes/nichidai-narashino-research.md`: 公式サイトから集めた学校情報と出典
 - `notes/session-plan-20260908.md`: 20分の進行案、聞き取り台本、プロンプト、チェックリスト
 
