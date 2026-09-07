@@ -19,6 +19,7 @@
 - `assets/narashino-visit-2-qr.png`: 公開URLのQRコード
 - `notes/nichidai-narashino-research.md`: 公式サイトから集めた学校情報と出典
 - `notes/session-plan-20260908.md`: 20分の進行案、聞き取り台本、プロンプト、チェックリスト
+- `slides/nichinara20260908.pptx`: 当日の発表スライド18枚（学科サイトのデザインに合わせたもの）
 
 ## ページの構成
 

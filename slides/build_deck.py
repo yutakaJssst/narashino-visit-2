@@ -1,0 +1,417 @@
+# -*- coding: utf-8 -*-
+"""日大習志野高校 模擬講義（20分）用スライド。
+デザインは応用情報工学科サイト（ce.cst.nihon-u.ac.jp）に合わせる。"""
+import sys, os
+from pptx import Presentation
+from pptx.util import Inches, Pt, Emu
+from pptx.dml.color import RGBColor
+from pptx.enum.text import PP_ALIGN, MSO_ANCHOR
+from pptx.enum.shapes import MSO_SHAPE
+from pptx.oxml.ns import qn
+
+IMG = sys.argv[1]
+OUT = sys.argv[2]
+
+PURPLE = RGBColor(0x91, 0x37, 0x7D)
+VIOLET = RGBColor(0x59, 0x3F, 0xBF)
+DEEP   = RGBColor(0x3D, 0x18, 0x36)
+INK    = RGBColor(0x33, 0x33, 0x33)
+MUTED  = RGBColor(0x77, 0x74, 0x78)
+WHITE  = RGBColor(0xFF, 0xFF, 0xFF)
+PAPER  = RGBColor(0xF7, 0xF5, 0xF7)
+LINE   = RGBColor(0xD9, 0xD3, 0xD8)
+
+SERIF = "Hiragino Mincho ProN"
+SANS  = "Hiragino Kaku Gothic ProN"
+MONO  = "Menlo"
+
+W, H = Inches(13.333), Inches(7.5)
+
+prs = Presentation()
+prs.slide_width, prs.slide_height = W, H
+BLANK = prs.slide_layouts[6]
+
+
+def set_run(run, text, font, size, color, bold=False, spacing=None):
+    run.text = text
+    run.font.size = Pt(size)
+    run.font.bold = bold
+    run.font.color.rgb = color
+    run.font.name = font
+    rPr = run._r.get_or_add_rPr()
+    for tag in ("a:ea", "a:cs"):
+        el = rPr.makeelement(qn(tag), {"typeface": font})
+        rPr.append(el)
+    if spacing is not None:
+        rPr.set("spc", str(int(spacing * 100)))
+
+
+def textbox(slide, x, y, w, h, align=PP_ALIGN.LEFT, anchor=MSO_ANCHOR.TOP):
+    tb = slide.shapes.add_textbox(x, y, w, h)
+    tf = tb.text_frame
+    tf.word_wrap = True
+    tf.margin_left = tf.margin_right = tf.margin_top = tf.margin_bottom = 0
+    tf.vertical_anchor = anchor
+    tf.paragraphs[0].alignment = align
+    return tf
+
+
+def line(tf, text, font, size, color, bold=False, spacing=None, space_before=0,
+         align=None, line_spacing=None, first=False):
+    p = tf.paragraphs[0] if first else tf.add_paragraph()
+    if align is not None:
+        p.alignment = align
+    if space_before:
+        p.space_before = Pt(space_before)
+    if line_spacing:
+        p.line_spacing = line_spacing
+    set_run(p.add_run(), text, font, size, color, bold, spacing)
+    return p
+
+
+def rect(slide, x, y, w, h, color, shape=MSO_SHAPE.RECTANGLE):
+    s = slide.shapes.add_shape(shape, x, y, w, h)
+    s.fill.solid()
+    s.fill.fore_color.rgb = color
+    s.line.fill.background()
+    s.shadow.inherit = False
+    return s
+
+
+def gradient_bg(slide):
+    s = rect(slide, 0, 0, W, H, PURPLE)
+    f = s.fill
+    f.gradient()
+    f.gradient_stops[0].color.rgb = PURPLE
+    f.gradient_stops[0].position = 0.0
+    f.gradient_stops[1].color.rgb = VIOLET
+    f.gradient_stops[1].position = 1.0
+    f.gradient_angle = 20.0
+    return s
+
+
+def corner_mark(slide, dark=False):
+    """サイトの斜めのあしらいを右下に置く"""
+    s = slide.shapes.add_shape(MSO_SHAPE.RIGHT_TRIANGLE, Inches(11.5), Inches(6.1), Inches(1.9), Inches(1.4))
+    s.fill.solid()
+    s.fill.fore_color.rgb = WHITE if dark else PURPLE
+    s.line.fill.background()
+    s.shadow.inherit = False
+    s.rotation = 180
+    if not dark:
+        from pptx.util import Emu as _E
+        s.fill.fore_color.rgb = PURPLE
+    return s
+
+
+def footer(slide, n, dark=False):
+    tf = textbox(slide, Inches(0.75), Inches(6.92), Inches(7.0), Inches(0.35))
+    line(tf, "日本大学理工学部 応用情報工学科", SANS, 10.5,
+         WHITE if dark else MUTED, first=True)
+    tf2 = textbox(slide, Inches(11.8), Inches(6.92), Inches(0.8), Inches(0.35), align=PP_ALIGN.RIGHT)
+    line(tf2, str(n), SANS, 10.5, WHITE if dark else MUTED, first=True)
+
+
+def head(slide, eyebrow, title, sub=None, n=0):
+    """白地の標準スライド見出し"""
+    rect(slide, 0, 0, W, H, WHITE)
+    tf = textbox(slide, Inches(0.75), Inches(0.52), Inches(8.0), Inches(0.5))
+    line(tf, eyebrow, SERIF, 20, PURPLE, bold=True, spacing=3.2, first=True)
+    tf2 = textbox(slide, Inches(0.75), Inches(1.05), Inches(11.8), Inches(1.1))
+    line(tf2, title, SERIF, 34, INK, bold=True, line_spacing=1.25, first=True)
+    y = Inches(2.05)
+    rect(slide, Inches(0.75), y, Inches(1.1), Pt(3), PURPLE)
+    if sub:
+        tf3 = textbox(slide, Inches(0.75), Inches(2.28), Inches(11.8), Inches(0.6))
+        line(tf3, sub, SANS, 15, MUTED, line_spacing=1.5, first=True)
+    footer(slide, n)
+    return slide
+
+
+def statement(slide, eyebrow, big, sub=None, n=0):
+    """紫地の主張スライド"""
+    gradient_bg(slide)
+    tf = textbox(slide, Inches(1.1), Inches(2.15), Inches(11.2), Inches(0.5))
+    line(tf, eyebrow, SERIF, 18, WHITE, bold=True, spacing=3.2, first=True)
+    tf2 = textbox(slide, Inches(1.1), Inches(2.75), Inches(11.2), Inches(2.2))
+    line(tf2, big, SERIF, 46, WHITE, bold=True, line_spacing=1.3, first=True)
+    if sub:
+        tf3 = textbox(slide, Inches(1.1), Inches(5.1), Inches(10.5), Inches(1.0))
+        line(tf3, sub, SANS, 16, WHITE, line_spacing=1.6, first=True)
+    footer(slide, n, dark=True)
+    return slide
+
+
+def picture_fit(slide, path, x, y, w, h):
+    from PIL import Image as PILImage
+    iw, ih = PILImage.open(path).size
+    scale = min(w / iw, h / ih)
+    nw, nh = int(iw * scale), int(ih * scale)
+    slide.shapes.add_picture(path, int(x + (w - nw) / 2), int(y + (h - nh) / 2), nw, nh)
+
+
+def img(name):
+    return os.path.join(IMG, name)
+
+
+N = [0]
+def new():
+    N[0] += 1
+    return prs.slides.add_slide(BLANK), N[0]
+
+# ---------------------------------------------------------------- 1 タイトル
+s, n = new()
+gradient_bg(s)
+rect(s, Inches(3.6), Inches(2.15), Inches(6.1), Pt(1.5), WHITE)
+tf = textbox(s, Inches(1.0), Inches(2.35), Inches(11.3), Inches(0.6), align=PP_ALIGN.CENTER)
+line(tf, "C r e a t i n g   A   N e w   W o r l d", SANS, 15, WHITE, bold=True, spacing=4, first=True)
+tf = textbox(s, Inches(1.0), Inches(3.02), Inches(11.3), Inches(2.0), align=PP_ALIGN.CENTER)
+line(tf, "AIと20分で、", SERIF, 50, WHITE, bold=True, line_spacing=1.2, first=True)
+line(tf, "日習のホームページを作る", SERIF, 50, WHITE, bold=True, line_spacing=1.2)
+rect(s, Inches(3.6), Inches(5.42), Inches(6.1), Pt(1.5), WHITE)
+tf = textbox(s, Inches(1.0), Inches(5.72), Inches(11.3), Inches(1.0), align=PP_ALIGN.CENTER)
+line(tf, "日本大学理工学部 応用情報工学科　教授　松野 裕", SANS, 17, WHITE, first=True)
+line(tf, "2026年9月8日　日本大学習志野高等学校 1学年 学部見学会", SANS, 13, WHITE, space_before=8)
+
+# ---------------------------------------------------------------- 2 自己紹介
+s, n = new()
+head(s, "Profile", "松野 裕（まつの ゆたか）", n=n)
+tf = textbox(s, Inches(0.75), Inches(2.55), Inches(6.4), Inches(3.4))
+for t in ["プログラミング言語", "ソフトウェア工学", "システムの総合信頼性（Dependability）"]:
+    line(tf, "・" + t, SANS, 19, INK, line_spacing=1.9, space_before=6, first=(t.startswith("プロ")))
+line(tf, "ソフトウェアを、どうやって安心して使えるものにするか。", SANS, 15, MUTED,
+     line_spacing=1.7, space_before=22)
+line(tf, "それを研究しています。", SANS, 15, MUTED, line_spacing=1.7)
+if os.path.exists(img("image2.jpeg")):
+    picture_fit(s, img("image2.jpeg"), Inches(7.6), Inches(2.4), Inches(4.9), Inches(3.9))
+
+# ---------------------------------------------------------------- 3 キャンパス
+s, n = new()
+head(s, "Campus", "みなさんの学校と、同じキャンパスの中にあります。",
+     "船橋日大前駅から歩いて5分。日大習志野高校の校舎も、この地図の中にあります。", n=n)
+picture_fit(s, img("campus_annotated.png"), Inches(0.75), Inches(2.7), Inches(11.8), Inches(4.15))
+
+# ---------------------------------------------------------------- 4 学科紹介
+s, n = new()
+head(s, "About Us", "AIとIoTを組み合わせたソフトウェアものづくりを学ぶ。",
+     "応用情報工学科では、3つの分野を学びます。", n=n)
+picture_fit(s, img("image12.jpg"), Inches(0.75), Inches(2.78), Inches(11.8), Inches(3.95))
+
+# ---------------------------------------------------------------- 5 日習の先輩
+s, n = new()
+head(s, "Students' Work", "日習の先輩が、この学科で一緒に作っています。",
+     "CSTコースの皆さんの作品。高校にいながら、理工学部の授業を受けられます。", n=n)
+picture_fit(s, img("work_nichinara.png"), Inches(2.5), Inches(2.9), Inches(8.3), Inches(3.7))
+
+# ---------------------------------------------------------------- 6 今日やること
+s, n = new()
+head(s, "Today", "20分で、日習のホームページを作ります。", n=n)
+steps = [("01", "見せる", "AIが昨日つくったサイトを見る"),
+         ("02", "聞く", "みなさんに、日習のいいところを聞く"),
+         ("03", "書き換える", "聞いたことを、その場でAIに反映させる"),
+         ("04", "公開する", "本物のURLで公開して、QRで配る")]
+x0, wcard, gap = Inches(0.75), Inches(2.85), Inches(0.25)
+for i, (num, t, d) in enumerate(steps):
+    x = x0 + i * (wcard + gap)
+    rect(s, x, Inches(2.75), wcard, Inches(3.2), PAPER)
+    rect(s, x, Inches(2.75), wcard, Pt(4), PURPLE)
+    tf = textbox(s, x + Inches(0.3), Inches(3.1), wcard - Inches(0.6), Inches(0.6))
+    line(tf, num, SERIF, 30, PURPLE, bold=True, spacing=2, first=True)
+    tf = textbox(s, x + Inches(0.3), Inches(3.95), wcard - Inches(0.6), Inches(0.6))
+    line(tf, t, SERIF, 23, INK, bold=True, first=True)
+    tf = textbox(s, x + Inches(0.3), Inches(4.65), wcard - Inches(0.6), Inches(1.2))
+    line(tf, d, SANS, 14, MUTED, line_spacing=1.65, first=True)
+
+# ---------------------------------------------------------------- 7 聞きます
+s, n = new()
+statement(s, "Your Turn", "みなさんに聞きます。", n=n)
+tf = textbox(s, Inches(1.1), Inches(4.65), Inches(11.0), Inches(1.9))
+qs = ["日習のいいところは？", "売店で一番買うものは？", "サイトの色は何色にする？", "ゲームの敵、何にする？"]
+for i, q in enumerate(qs):
+    line(tf, "　" + q, SANS, 19, WHITE, line_spacing=1.55, first=(i == 0))
+
+# ---------------------------------------------------------------- 8 AIは何をしている
+s, n = new()
+head(s, "Behind the Scenes", "いま、AIは何をしているのか。", n=n)
+flow = [("みなさんの言葉", "「人工芝がいい」\n「売店のパンがうまい」"),
+        ("AIがデータを書き換える", "文章・色・ゲームの設定を\nまとめて直す"),
+        ("サイトが変わる", "読み込み直すと\n見た目が変わる")]
+x0, wcard, gap = Inches(0.85), Inches(3.45), Inches(0.8)
+for i, (t, d) in enumerate(flow):
+    x = x0 + i * (wcard + gap)
+    rect(s, x, Inches(3.0), wcard, Inches(2.5), PAPER)
+    rect(s, x, Inches(3.0), Pt(4), Inches(2.5), PURPLE)
+    tf = textbox(s, x + Inches(0.35), Inches(3.45), wcard - Inches(0.7), Inches(0.7))
+    line(tf, t, SERIF, 21, INK, bold=True, line_spacing=1.25, first=True)
+    tf = textbox(s, x + Inches(0.35), Inches(4.35), wcard - Inches(0.7), Inches(1.0))
+    for j, ln in enumerate(d.split("\n")):
+        line(tf, ln, SANS, 14, MUTED, line_spacing=1.55, first=(j == 0))
+    if i < 2:
+        tf = textbox(s, x + wcard, Inches(4.05), gap, Inches(0.6), align=PP_ALIGN.CENTER)
+        line(tf, "▶", SANS, 20, PURPLE, first=True)
+
+# ---------------------------------------------------------------- 9 全部この1か所
+s, n = new()
+head(s, "Data", "見出しも、色も、ゲームも。書いてあるのは1か所だけ。", n=n)
+rect(s, Inches(0.75), Inches(2.68), Inches(7.3), Inches(3.78), RGBColor(0x2B, 0x25, 0x33))
+code = [
+    "const siteData = {",
+    '  schoolName: "日本大学習志野高等学校",',
+    '  theme: { brand: "#0f2a5c", accent: "#d7263d" },',
+    "  features: [",
+    '    { title: "人工芝のグラウンド", body: "…" },',
+    "  ],",
+    "  voices: [",
+    '    { name: "1年生", quote: "＿＿＿＿＿" },',
+    "  ],",
+    "  game: { lives: 3, stages: [ … ] }",
+    "};",
+]
+tf = textbox(s, Inches(1.05), Inches(2.95), Inches(6.8), Inches(3.3))
+for i, ln in enumerate(code):
+    line(tf, ln, MONO, 12, RGBColor(0xE8, 0xE3, 0xEE), line_spacing=1.45, first=(i == 0))
+notes = [("校名・キャッチコピー", "サイトの一番上に出る文字"),
+         ("色", "この2行を変えるだけで全体の色が変わる"),
+         ("魅力・生徒の声", "今日、みなさんの言葉で埋めるところ"),
+         ("ゲーム", "ステージも敵も、ここに書いてある")]
+tf = textbox(s, Inches(8.5), Inches(2.9), Inches(4.1), Inches(3.4))
+for i, (t, d) in enumerate(notes):
+    line(tf, t, SANS, 16, PURPLE, bold=True, space_before=(0 if i == 0 else 16), first=(i == 0))
+    line(tf, d, SANS, 13, MUTED, line_spacing=1.5, space_before=2)
+
+# ---------------------------------------------------------------- 10 読めれば直せる
+s, n = new()
+statement(s, "Why It Matters", "読める人が、直せる人になる。",
+          "AIが書いたものを、読んで、確かめて、直す。そこから先は人間の仕事です。", n=n)
+
+# ---------------------------------------------------------------- 11 ステージも文字
+s, n = new()
+head(s, "Game", "ゲームのステージも、ただの文字です。",
+     "「#」を1つ足せば足場が増え、「E」を書けば敵が現れます。", n=n)
+rect(s, Inches(0.75), Inches(3.0), Inches(7.5), Inches(3.35), RGBColor(0x2B, 0x25, 0x33))
+stage = [
+    "..................................",
+    "..................................",
+    "...................oo.............",
+    "..................====............",
+    "..................................",
+    "......ooo....................oo...",
+    "......===...................====..",
+    "..P.........E...B..........E......",
+    "######################...#########",
+    "######################...#########",
+]
+tf = textbox(s, Inches(1.05), Inches(3.3), Inches(7.0), Inches(2.8))
+for i, ln in enumerate(stage):
+    line(tf, ln, MONO, 13.5, RGBColor(0xE8, 0xE3, 0xEE), line_spacing=1.28, first=(i == 0))
+leg = [("#", "地面"), ("=", "すり抜け床"), ("o", "アイテム"),
+       ("E", "歩く敵"), ("B", "ジャンプ台"), ("P", "スタート")]
+tf = textbox(s, Inches(8.75), Inches(3.15), Inches(3.9), Inches(3.2))
+for i, (c, d) in enumerate(leg):
+    line(tf, "　" + c + "　　" + d, SANS, 16, INK, line_spacing=1.85, first=(i == 0))
+
+# ---------------------------------------------------------------- 12 3年後7年後
+s, n = new()
+head(s, "Your Future", "3年後、みなさんは大学生。7年後、働いています。", n=n)
+rect(s, Inches(1.4), Inches(3.9), Inches(10.5), Pt(3), LINE)
+marks = [("2026", "今日", "高校1年生", Inches(1.4)),
+         ("2029", "3年後", "大学に入る", Inches(5.15)),
+         ("2033", "7年後", "働きはじめる", Inches(8.9))]
+for year, when, what, x in marks:
+    rect(s, x + Inches(0.55), Inches(3.72), Inches(0.22), Inches(0.22), PURPLE, MSO_SHAPE.OVAL)
+    tf = textbox(s, x, Inches(2.95), Inches(2.6), Inches(0.7), align=PP_ALIGN.CENTER)
+    line(tf, year, SERIF, 34, PURPLE, bold=True, spacing=1, first=True)
+    tf = textbox(s, x, Inches(4.25), Inches(2.6), Inches(1.1), align=PP_ALIGN.CENTER)
+    line(tf, when, SANS, 15, MUTED, first=True)
+    line(tf, what, SERIF, 22, INK, bold=True, space_before=6)
+tf = textbox(s, Inches(0.75), Inches(5.85), Inches(11.8), Inches(0.8))
+line(tf, "そのころAIが何をできるようになっているか、私にも分かりません。", SANS, 18, INK, first=True)
+
+# ---------------------------------------------------------------- 13 AIの速さ
+s, n = new()
+head(s, "How Fast", "3年半で、ここまで来ました。", n=n)
+cols = [("2022年11月", "ChatGPTが公開された", "文章を書くのが中心だった", PAPER, INK),
+        ("2026年9月", "今日、この20分", "話を聞いて、サイトを作って、公開できる", PURPLE, WHITE)]
+for i, (d1, d2, d3, bg, fg) in enumerate(cols):
+    x = Inches(0.75) + i * Inches(6.15)
+    rect(s, x, Inches(2.9), Inches(5.65), Inches(2.6), bg)
+    tf = textbox(s, x + Inches(0.45), Inches(3.2), Inches(4.9), Inches(0.5))
+    line(tf, d1, SANS, 15, (WHITE if i else PURPLE), bold=True, first=True)
+    tf = textbox(s, x + Inches(0.45), Inches(3.75), Inches(4.9), Inches(0.7))
+    line(tf, d2, SERIF, 25, fg, bold=True, first=True)
+    tf = textbox(s, x + Inches(0.45), Inches(4.55), Inches(4.9), Inches(0.8))
+    line(tf, d3, SANS, 14, (WHITE if i else MUTED), line_spacing=1.55, first=True)
+tf = textbox(s, Inches(0.75), Inches(5.85), Inches(11.8), Inches(0.9))
+line(tf, "次の3年で何が起きるかは、誰にも分かりません。", SANS, 18, INK, first=True)
+line(tf, "だから、予想するより先に、いまのAIを自分で触ってみることです。", SANS, 18, INK, space_before=6)
+
+# ---------------------------------------------------------------- 14 AIと人間
+s, n = new()
+head(s, "AI and You", "今日、AIがやったこと。人間がやったこと。", n=n)
+left = ["文章を書いた", "色を決めた", "コードを書いた", "ゲームのステージを作った"]
+right = ["何を作るか決めた", "みなさんに聞いた", "本当かどうか確かめた", "ちがうと言って直させた"]
+for i, (ttl, items, bg, fg, sub) in enumerate([
+        ("AI", left, PAPER, INK, MUTED), ("人間", right, PURPLE, WHITE, WHITE)]):
+    x = Inches(0.75) + i * Inches(6.15)
+    rect(s, x, Inches(2.85), Inches(5.65), Inches(3.45), bg)
+    tf = textbox(s, x + Inches(0.45), Inches(3.15), Inches(4.9), Inches(0.6))
+    line(tf, ttl, SERIF, 27, (PURPLE if i == 0 else WHITE), bold=True, spacing=2, first=True)
+    tf = textbox(s, x + Inches(0.45), Inches(3.9), Inches(4.9), Inches(2.3))
+    for j, it in enumerate(items):
+        line(tf, "・" + it, SANS, 16, fg, line_spacing=1.78, first=(j == 0))
+tf = textbox(s, Inches(0.75), Inches(6.48), Inches(11.8), Inches(0.5))
+line(tf, "AIは日習のことを何も知りませんでした。知っているのは、みなさんだけです。", SANS, 17, PURPLE, bold=True, first=True)
+
+# ---------------------------------------------------------------- 15 AIも間違える
+s, n = new()
+head(s, "Check", "AIも間違えます。確かめるのは人間です。", n=n)
+items = [("つくった", "AIがゲームのステージを作った"),
+         ("確かめた", "本当にクリアできるか、自動で調べるプログラムを人間が書いた"),
+         ("それでも", "公開して初めて見つかったバグが1つありました")]
+for i, (t, d) in enumerate(items):
+    y = Inches(2.95) + i * Inches(1.15)
+    rect(s, Inches(0.75), y, Pt(4), Inches(0.85), PURPLE)
+    tf = textbox(s, Inches(1.1), y, Inches(2.1), Inches(0.85), anchor=MSO_ANCHOR.MIDDLE)
+    line(tf, t, SERIF, 21, PURPLE, bold=True, first=True)
+    tf = textbox(s, Inches(3.3), y, Inches(9.2), Inches(0.85), anchor=MSO_ANCHOR.MIDDLE)
+    line(tf, d, SANS, 17, INK, line_spacing=1.4, first=True)
+tf = textbox(s, Inches(0.75), Inches(6.45), Inches(11.8), Inches(0.5))
+line(tf, "確かめる仕組みを作れる人が要ります。それを学ぶのが情報系の学科です。", SANS, 17, PURPLE, bold=True, first=True)
+
+# ---------------------------------------------------------------- 16 まとめ
+s, n = new()
+gradient_bg(s)
+tf = textbox(s, Inches(1.1), Inches(1.05), Inches(11.2), Inches(0.5))
+line(tf, "Summary", SERIF, 18, WHITE, bold=True, spacing=3.2, first=True)
+tf = textbox(s, Inches(1.1), Inches(1.6), Inches(11.2), Inches(0.9))
+line(tf, "今日、持って帰ってほしいこと。", SERIF, 38, WHITE, bold=True, first=True)
+pts = [("01", "いまのAIを、自分で触ってみる", "どこまでできて、どこができないかは、触らないと分からない"),
+       ("02", "何を作るか決めるのは、人間", "AIは日習を知らない。決めて、聞いて、確かめるのはみなさん"),
+       ("03", "読めれば、直せる", "その中身を学ぶのが、応用情報工学科です")]
+for i, (num, t, d) in enumerate(pts):
+    y = Inches(2.85) + i * Inches(1.28)
+    tf = textbox(s, Inches(1.1), y, Inches(1.0), Inches(0.6))
+    line(tf, num, SERIF, 26, WHITE, bold=True, spacing=2, first=True)
+    tf = textbox(s, Inches(2.2), y - Inches(0.05), Inches(10.0), Inches(0.55))
+    line(tf, t, SERIF, 26, WHITE, bold=True, first=True)
+    tf = textbox(s, Inches(2.2), y + Inches(0.52), Inches(10.0), Inches(0.5))
+    line(tf, d, SANS, 14, WHITE, first=True)
+footer(s, n, dark=True)
+
+# ---------------------------------------------------------------- 17,18 QR
+for label, qr, url in [("1回目のみなさんへ", "narashino-visit-1-qr.png",
+                        "https://yutakajssst.github.io/narashino-visit-1/"),
+                       ("2回目のみなさんへ", "narashino-visit-2-qr.png",
+                        "https://yutakajssst.github.io/narashino-visit-2/")]:
+    s, n = new()
+    head(s, "Your Site", "今日つくったサイトは、ここにあります。",
+         label + "　放課後でも、家でも開けます。", n=n)
+    if os.path.exists(img(qr)):
+        picture_fit(s, img(qr), Inches(1.35), Inches(2.85), Inches(3.3), Inches(3.3))
+    tf = textbox(s, Inches(5.25), Inches(3.55), Inches(7.4), Inches(1.4))
+    line(tf, url, MONO, 16, PURPLE, bold=True, line_spacing=1.4, first=True)
+    line(tf, "スマホのカメラでQRコードを読んでください。", SANS, 15, MUTED, space_before=16)
+    line(tf, "みなさんの言葉が入ったページと、ミニゲームがあります。", SANS, 15, MUTED, space_before=4)
+
+prs.save(OUT)
+print("saved", OUT, "slides:", len(prs.slides.__iter__.__self__._sldIdLst))
