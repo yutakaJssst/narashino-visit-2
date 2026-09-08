@@ -81,6 +81,12 @@ const siteData = {
     { name: "1年生", role: "学校行事", quote: "いろいろな行事があって、楽しいです。" },
     { placeholder: true, name: "1年生", role: "募集中", quote: "本当の日習は、君たちしか知りません。" }
   ],
+  photo: {
+    src: "assets/visit-2026-09-08.webp",
+    alt: "模擬講義の教室で、机を囲む参加者のみなさん",
+    title: "今日の模擬講義。",
+    caption: "2026年9月8日。みんなの声で、日習の紹介サイトを更新中！"
+  },
   eventsTitle: "一年を動かす行事。",
   eventsSub: "公式の年間行事から、1年生に関係の深いものを並べました。",
   events: [
@@ -259,6 +265,10 @@ setText("[data-learning-body]", siteData.learning.body);
 setText("[data-open-label]", siteData.learning.openLabel);
 setText("[data-voices-title]", siteData.voicesTitle);
 setText("[data-voices-sub]", siteData.voicesSub);
+document.querySelector("[data-visit-photo]").src = siteData.photo.src;
+document.querySelector("[data-visit-photo]").alt = siteData.photo.alt;
+setText("[data-photo-title]", siteData.photo.title);
+setText("[data-photo-caption]", siteData.photo.caption);
 setText("[data-events-title]", siteData.eventsTitle);
 setText("[data-events-sub]", siteData.eventsSub);
 setText("[data-clubs-title]", siteData.clubsTitle);
