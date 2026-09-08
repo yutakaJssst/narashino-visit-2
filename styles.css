@@ -1126,6 +1126,15 @@ p {
 
 /* Photos (used when a photo section is added on the day) */
 
+.photo-card.visit-photo {
+  max-width: 960px;
+  margin: 32px auto 0;
+}
+
+.visit-photo img {
+  height: auto;
+}
+
 .photo-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
