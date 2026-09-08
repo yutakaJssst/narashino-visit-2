@@ -135,7 +135,9 @@ const siteData = {
   game: {
     title: "日習クエスト",
     body: "船橋日大前駅から、理工学部のキャンパスを抜けて、校舎の陸橋の上まで。3ステージの横スクロールアクションです。敵は上から踏むと倒せます。",
-    note: "ステージは文字で書かれた地図です。「#」を1つ足せば足場が増え、「E」を書けば敵が現れます。今日はここも書き換えます。",
+    note: "ミスしたら、残機を1つ使って5秒前に巻き戻し！ まだ5秒たっていなければ、このステージの最初から。",
+    rewindSeconds: 5,
+    rewindMessage: "秒前に巻き戻し！",
     startTitle: "日習クエスト",
     startNote: "スタートを押す／画面をタップ",
     hint: "← → で移動、スペースまたは ↑ でジャンプ（長押しで高く）。スマホは下のボタン。",
@@ -644,6 +646,7 @@ function initGame() {
     world: null,
     player: null,
     particles: [],
+    history: [],
     best: loadBest()
   };
 
@@ -817,6 +820,7 @@ function initGame() {
     game.items = 0;
     game.time = 0;
     game.particles = [];
+    game.history = [];
     spawnPlayer();
     snapCamera();
   }
@@ -990,8 +994,7 @@ function initGame() {
           game.mode = "over";
           game.overlay = 0;
         } else {
-          spawnPlayer();
-          snapCamera();
+          rewind();
           game.mode = "ready";
           game.overlay = 48;
         }
@@ -1016,13 +1019,55 @@ function initGame() {
       return;
     }
 
+    remember();
     game.time += 1;
     updatePlatforms();
     updatePlayer();
-    updateEnemies();
-    checkPickups();
+    if (game.mode === "play") updateEnemies();
+    if (game.mode === "play") checkPickups();
     updateCamera();
     renderHud();
+  }
+
+  function remember() {
+    const world = game.world;
+    // Clone together so the player's riding platform keeps its shared reference.
+    game.history.push(structuredClone({
+      time: game.time,
+      items: game.items,
+      player: game.player,
+      cam: game.cam,
+      coins: world.coins,
+      enemies: world.enemies,
+      platforms: world.platforms,
+      checkpoints: world.checkpoints,
+      spawn: world.spawn
+    }));
+    const frames = Math.max(1, Math.round(cfg.rewindSeconds * 60));
+    if (game.history.length > frames) game.history.shift();
+  }
+
+  function rewind() {
+    const saved = game.history[0];
+    if (!saved) {
+      spawnPlayer();
+      snapCamera();
+      return;
+    }
+    game.time = saved.time;
+    game.items = saved.items;
+    game.player = saved.player;
+    game.cam = saved.cam;
+    for (const key of ["coins", "enemies", "platforms", "checkpoints", "spawn"]) {
+      game.world[key] = saved[key];
+    }
+    game.player.invuln = Math.max(game.player.invuln, 90);
+    game.particles = [];
+    game.shake = 0;
+    game.history = [];
+    keys.left = false;
+    keys.right = false;
+    keys.jump = false;
   }
 
   function updatePlatforms() {
@@ -1696,7 +1741,9 @@ function initGame() {
       sub = stage.subtitle;
     } else if (game.mode === "hurt") {
       title = "ミス！";
-      sub = `のこり ${Math.max(0, game.lives)}`;
+      sub = game.lives > 0
+        ? `${formatTime(game.time - (game.history[0]?.time ?? game.time))}${cfg.rewindMessage}　のこり ${game.lives}`
+        : `のこり 0`;
     } else if (game.mode === "clear") {
       title = "STAGE CLEAR";
       sub = `${stage.name}　タイム ${formatTime(game.time)} 秒`;
