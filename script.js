@@ -135,12 +135,12 @@ const siteData = {
   },
   game: {
     title: "明和県央クエスト",
-    body: "群馬総社駅から学校へ。広い校地を進み、C-HALLを目指す3ステージの横スクロールアクションです。敵は上から踏むと倒せます。",
-    note: "ミスしたら、残機を1つ使って5秒前に巻き戻し！ 敵の名前やアイテムは、みなさんの案で変えられます。",
+    body: "群馬総社駅から学校へ。「大」で機体を大きくし、「ワ」で前方へワープしながらC-HALLを目指す3ステージです。",
+    note: "大きい間は敵に1回当たっても元のサイズに戻るだけ。ミスしたら残機を1つ使って5秒前に巻き戻します。",
     rewindSeconds: 5,
     rewindMessage: "秒前に巻き戻し！",
     startTitle: "明和県央クエスト",
-    startNote: "スタートを押す／画面をタップ",
+    startNote: "「大」で成長、「ワ」で前方へワープ！",
     hint: "← → で移動、スペースまたは ↑ でジャンプ（長押しで高く）。スマホは下のボタン。",
     playerLabel: "AI",
     lives: 3,
@@ -156,7 +156,7 @@ const siteData = {
     legend: [
       { symbol: "#", body: "地面・ブロック" },
       { symbol: "=", body: "すり抜け床" },
-      { symbol: "o", body: "アイテム" },
+      { symbol: "o", body: "成長「大」／ワープ「ワ」" },
       { symbol: "E", body: "歩く敵" },
       { symbol: "F", body: "飛ぶ敵" },
       { symbol: "M-", body: "横に動く床" },
@@ -173,7 +173,7 @@ const siteData = {
         subtitle: "群馬総社駅から明和県央高校へ",
         backdrop: "town",
         palette: { sky: "#dbe8fb", sky2: "#f4f0e6", far: "#b9ccea", ground: "#162a55", surface: "#36529c", accent: "#fa8633" },
-        items: ["進", "取"],
+        items: ["大", "ワ"],
         enemyLabels: ["寝坊", "忘れ物", "乗り遅れ"],
         map: [
           "........................................................................",
@@ -196,7 +196,7 @@ const siteData = {
         subtitle: "運動施設をぬけて校舎へ",
         backdrop: "campus",
         palette: { sky: "#d6ecdd", sky2: "#f4f0e6", far: "#a9cfb4", ground: "#173a2a", surface: "#009a44", accent: "#fa8633" },
-        items: ["挑", "戦", "発", "見"],
+        items: ["大", "ワ"],
         enemyLabels: ["坂道", "向かい風", "うっかり"],
         map: [
           "............................................................................",
@@ -219,7 +219,7 @@ const siteData = {
         subtitle: "AL室からC-HALLへ",
         backdrop: "indoor",
         palette: { sky: "#e5e9f2", sky2: "#f4f0e6", far: "#c5d1eb", ground: "#17244a", surface: "#1a4fb5", accent: "#fa8633" },
-        items: ["明", "和", "県", "央"],
+        items: ["大", "ワ"],
         enemyLabels: ["小テスト", "宿題", "居眠り"],
         map: [
           "............................................................................",
@@ -847,7 +847,8 @@ function initGame() {
       riding: null,
       jumped: false,
       squash: 0,
-      invuln: 70
+      invuln: 70,
+      grown: false
     };
   }
 
@@ -1298,7 +1299,17 @@ function initGame() {
         game.shake = 6;
         burst(enemy.x + enemy.w / 2, enemy.y + enemy.h / 2, game.world.stage.palette.accent, 12);
       } else {
-        hurt();
+        if (player.grown) {
+          player.grown = false;
+          player.invuln = 90;
+          player.vx = player.x < enemy.x ? -6 : 6;
+          player.vy = -7;
+          game.shake = 10;
+          game.history = [];
+          burst(player.x + player.w / 2, player.y + player.h / 2, "#f7b801", 16);
+        } else {
+          hurt();
+        }
       }
     });
   }
@@ -1315,7 +1326,15 @@ function initGame() {
       ) {
         coin.taken = true;
         game.items += 1;
-        burst(coin.x, coin.y, "#f7b801", 8);
+        if (coin.label === "大") {
+          player.grown = true;
+          player.invuln = Math.max(player.invuln, 45);
+          burst(coin.x, coin.y, "#f7b801", 14);
+        } else if (coin.label === "ワ") {
+          warpForward(player, world);
+        } else {
+          burst(coin.x, coin.y, "#f7b801", 8);
+        }
       }
     });
 
@@ -1332,6 +1351,33 @@ function initGame() {
       game.mode = "clear";
       game.overlay = 120;
       burst(world.goal.x + world.goal.w / 2, world.goal.y + 20, world.stage.palette.accent, 20);
+    }
+  }
+
+  function warpForward(player, world) {
+    const startCol = Math.min(world.cols - 4, Math.floor(player.x / TILE) + 12);
+    const beforeX = player.x + player.w / 2;
+    const beforeY = player.y + player.h / 2;
+
+    for (let offset = 0; offset < 12; offset += 1) {
+      const col = Math.min(world.cols - 4, startCol + offset);
+      for (let row = 2; row < world.rows; row += 1) {
+        if (
+          isSolid(tileAt(col, row)) &&
+          tileAt(col, row - 1) === "." &&
+          tileAt(col, row - 2) === "."
+        ) {
+          burst(beforeX, beforeY, "#8c5cff", 18);
+          player.x = col * TILE + (TILE - player.w) / 2;
+          player.y = row * TILE - player.h;
+          player.vx = 0;
+          player.vy = 0;
+          player.invuln = 90;
+          game.history = [];
+          burst(player.x + player.w / 2, player.y + player.h / 2, "#8c5cff", 18);
+          return;
+        }
+      }
     }
   }
 
@@ -1580,7 +1626,7 @@ function initGame() {
       const bob = Math.sin(performance.now() / 380 + coin.phase) * 3.5;
       ctx.save();
       ctx.translate(coin.x, coin.y + bob);
-      ctx.fillStyle = "#f7b801";
+      ctx.fillStyle = coin.label === "ワ" ? "#8c5cff" : "#f7b801";
       ctx.beginPath();
       ctx.arc(0, 0, 13, 0, Math.PI * 2);
       ctx.fill();
@@ -1687,7 +1733,8 @@ function initGame() {
     const scaleY = 1 - squash;
     ctx.save();
     ctx.translate(player.x + player.w / 2, player.y + player.h);
-    ctx.scale(scaleX, scaleY);
+    const growth = player.grown ? 1.45 : 1;
+    ctx.scale(scaleX * growth, scaleY * growth);
     ctx.fillStyle = "rgba(20,26,38,0.14)";
     ctx.beginPath();
     ctx.ellipse(0, 4, player.w * 0.55, 5, 0, 0, Math.PI * 2);
@@ -1715,7 +1762,7 @@ function initGame() {
       ctx.fillStyle = "rgba(20,26,38,0.55)";
       ctx.font = "800 11px system-ui, sans-serif";
       ctx.textAlign = "center";
-      ctx.fillText(cfg.playerLabel, player.x + player.w / 2, player.y - 8);
+      ctx.fillText(cfg.playerLabel, player.x + player.w / 2, player.y - (player.grown ? 25 : 8));
     }
   }
 
