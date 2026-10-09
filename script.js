@@ -83,10 +83,10 @@ const siteData = {
     { placeholder: true, name: "1年生", role: "募集中", quote: "学校生活で自慢したいことは？" }
   ],
   photo: {
-    src: "assets/photos/meiwakenoh-20261006-a-group.jpg",
-    alt: "日本大学理工学部の教室でミニ講義に参加する明和県央高等学校の1年生",
+    src: "assets/photos/lecture-past.jpeg",
+    alt: "過去の講義で話す日本大学理工学部の教員",
     title: "今日は、理工学部でミニ講義！",
-    caption: "今日のA班。明和県央高校1年生のみなさんと、AIで学校紹介サイトを制作しました。2026年10月6日 14:00、日本大学理工学部 船橋校舎。"
+    caption: "過去の講義の写真です。今日はA班の1年生のみなさんと、AIで学校紹介サイトを制作しました。2026年10月6日 14:00、日本大学理工学部 船橋校舎。"
   },
   eventsTitle: "一年を動かす行事。",
   eventsSub: "公式の年間行事から、1年生に関係の深いものを並べました。",
